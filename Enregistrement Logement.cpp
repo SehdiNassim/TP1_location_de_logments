@@ -11,7 +11,6 @@ void enrgLogement(ListeLogement ** tete) {
     fLogement = fopen("logements", "r");
     while (feof(fLogement) != 0) {
         allouerLog(tete);
-
     }
 }
 

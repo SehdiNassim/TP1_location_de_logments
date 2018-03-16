@@ -74,12 +74,21 @@ typedef  struct MaillionLocation {
     FicheLocation fiche;
     struct MaillionLocation * adr;
 } ListeLocation;
+
+
 //todo: Fonction allouerLog, allouerLoc, allouerLoca
 
 void allouerLog(ListeLogement ** tete) {
     *tete = malloc(sizeof(struct MaillionLogement));
 }
 
+void allouerLct(ListeLocation ** tete) {
+    *tete = malloc(sizeof(struct MaillionLocation));
+}
+
+void allouerLoc(ListeLocataire **tete) {
+    *tete = malloc(sizeof(struct MaillionLocataire));
+}
 
 
 //Todo: Make "Enregistremnt Logement" Module
