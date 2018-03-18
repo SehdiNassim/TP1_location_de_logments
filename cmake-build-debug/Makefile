@@ -122,32 +122,32 @@ TP01/fast:
 	$(MAKE) -f CMakeFiles\TP01.dir\build.make CMakeFiles/TP01.dir/build
 .PHONY : TP01/fast
 
-main.obj: main.c.obj
+testModule.obj: testModule.c.obj
 
-.PHONY : main.obj
+.PHONY : testModule.obj
 
 # target to build an object file
-main.c.obj:
-	$(MAKE) -f CMakeFiles\TP01.dir\build.make CMakeFiles/TP01.dir/main.c.obj
-.PHONY : main.c.obj
+testModule.c.obj:
+	$(MAKE) -f CMakeFiles\TP01.dir\build.make CMakeFiles/TP01.dir/testModule.c.obj
+.PHONY : testModule.c.obj
 
-main.i: main.c.i
+testModule.i: testModule.c.i
 
-.PHONY : main.i
+.PHONY : testModule.i
 
 # target to preprocess a source file
-main.c.i:
-	$(MAKE) -f CMakeFiles\TP01.dir\build.make CMakeFiles/TP01.dir/main.c.i
-.PHONY : main.c.i
+testModule.c.i:
+	$(MAKE) -f CMakeFiles\TP01.dir\build.make CMakeFiles/TP01.dir/testModule.c.i
+.PHONY : testModule.c.i
 
-main.s: main.c.s
+testModule.s: testModule.c.s
 
-.PHONY : main.s
+.PHONY : testModule.s
 
 # target to generate assembly for a file
-main.c.s:
-	$(MAKE) -f CMakeFiles\TP01.dir\build.make CMakeFiles/TP01.dir/main.c.s
-.PHONY : main.c.s
+testModule.c.s:
+	$(MAKE) -f CMakeFiles\TP01.dir\build.make CMakeFiles/TP01.dir/testModule.c.s
+.PHONY : testModule.c.s
 
 # Help Target
 help:
@@ -158,9 +158,9 @@ help:
 	@echo ... TP01
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... main.obj
-	@echo ... main.i
-	@echo ... main.s
+	@echo ... testModule.obj
+	@echo ... testModule.i
+	@echo ... testModule.s
 .PHONY : help
 
 

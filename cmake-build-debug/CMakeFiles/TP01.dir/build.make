@@ -56,38 +56,38 @@ include CMakeFiles/TP01.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/TP01.dir/flags.make
 
-CMakeFiles/TP01.dir/main.c.obj: CMakeFiles/TP01.dir/flags.make
-CMakeFiles/TP01.dir/main.c.obj: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\X360\CLionProjects\TP01\TP1_location_de_logments\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/TP01.dir/main.c.obj"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\TP01.dir\main.c.obj   -c C:\Users\X360\CLionProjects\TP01\TP1_location_de_logments\main.c
+CMakeFiles/TP01.dir/testModule.c.obj: CMakeFiles/TP01.dir/flags.make
+CMakeFiles/TP01.dir/testModule.c.obj: ../testModule.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\X360\CLionProjects\TP01\TP1_location_de_logments\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/TP01.dir/testModule.c.obj"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\TP01.dir\testModule.c.obj   -c C:\Users\X360\CLionProjects\TP01\TP1_location_de_logments\testModule.c
 
-CMakeFiles/TP01.dir/main.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/TP01.dir/main.c.i"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\X360\CLionProjects\TP01\TP1_location_de_logments\main.c > CMakeFiles\TP01.dir\main.c.i
+CMakeFiles/TP01.dir/testModule.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/TP01.dir/testModule.c.i"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\X360\CLionProjects\TP01\TP1_location_de_logments\testModule.c > CMakeFiles\TP01.dir\testModule.c.i
 
-CMakeFiles/TP01.dir/main.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/TP01.dir/main.c.s"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\X360\CLionProjects\TP01\TP1_location_de_logments\main.c -o CMakeFiles\TP01.dir\main.c.s
+CMakeFiles/TP01.dir/testModule.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/TP01.dir/testModule.c.s"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\X360\CLionProjects\TP01\TP1_location_de_logments\testModule.c -o CMakeFiles\TP01.dir\testModule.c.s
 
-CMakeFiles/TP01.dir/main.c.obj.requires:
+CMakeFiles/TP01.dir/testModule.c.obj.requires:
 
-.PHONY : CMakeFiles/TP01.dir/main.c.obj.requires
+.PHONY : CMakeFiles/TP01.dir/testModule.c.obj.requires
 
-CMakeFiles/TP01.dir/main.c.obj.provides: CMakeFiles/TP01.dir/main.c.obj.requires
-	$(MAKE) -f CMakeFiles\TP01.dir\build.make CMakeFiles/TP01.dir/main.c.obj.provides.build
-.PHONY : CMakeFiles/TP01.dir/main.c.obj.provides
+CMakeFiles/TP01.dir/testModule.c.obj.provides: CMakeFiles/TP01.dir/testModule.c.obj.requires
+	$(MAKE) -f CMakeFiles\TP01.dir\build.make CMakeFiles/TP01.dir/testModule.c.obj.provides.build
+.PHONY : CMakeFiles/TP01.dir/testModule.c.obj.provides
 
-CMakeFiles/TP01.dir/main.c.obj.provides.build: CMakeFiles/TP01.dir/main.c.obj
+CMakeFiles/TP01.dir/testModule.c.obj.provides.build: CMakeFiles/TP01.dir/testModule.c.obj
 
 
 # Object files for target TP01
 TP01_OBJECTS = \
-"CMakeFiles/TP01.dir/main.c.obj"
+"CMakeFiles/TP01.dir/testModule.c.obj"
 
 # External object files for target TP01
 TP01_EXTERNAL_OBJECTS =
 
-TP01.exe: CMakeFiles/TP01.dir/main.c.obj
+TP01.exe: CMakeFiles/TP01.dir/testModule.c.obj
 TP01.exe: CMakeFiles/TP01.dir/build.make
 TP01.exe: CMakeFiles/TP01.dir/linklibs.rsp
 TP01.exe: CMakeFiles/TP01.dir/objects1.rsp
@@ -100,7 +100,7 @@ CMakeFiles/TP01.dir/build: TP01.exe
 
 .PHONY : CMakeFiles/TP01.dir/build
 
-CMakeFiles/TP01.dir/requires: CMakeFiles/TP01.dir/main.c.obj.requires
+CMakeFiles/TP01.dir/requires: CMakeFiles/TP01.dir/testModule.c.obj.requires
 
 .PHONY : CMakeFiles/TP01.dir/requires
 

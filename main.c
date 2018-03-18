@@ -15,8 +15,6 @@ FILE * fLocataires;
 
 ListeLocataire * locataires;
 ListeLogement * logements;
-//This is a test to commit it to scratch
-//LOLOLOLO NASSSIIIIIIM
 ListeLocation * locations;
 
 

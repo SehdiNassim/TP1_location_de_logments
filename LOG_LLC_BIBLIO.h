@@ -29,7 +29,7 @@ typedef struct {
 //Definition du type Logement
 typedef struct Logement {
     int id; //permettant d'identifier le logement
-    Typelog type;
+    int type;
     int air;
     char* nomQuartier;
     int distCommune;
@@ -75,11 +75,8 @@ typedef  struct MaillionLocation {
     struct MaillionLocation * adr;
 } ListeLocation;
 
-
-//todo: Fonction allouerLog, allouerLoc, allouerLoca
-
 void allouerLog(ListeLogement ** tete) {
-    *tete = malloc(sizeof(struct MaillionLogement));
+    *tete = malloc(sizeof(ListeLogement));
 }
 
 void allouerLct(ListeLocation ** tete) {
@@ -90,10 +87,20 @@ void allouerLoc(ListeLocataire **tete) {
     *tete = malloc(sizeof(struct MaillionLocataire));
 }
 
+FicheLogement Fiche(ListeLogement * tete) {
+    return tete->fiche;
+}
 
-//Todo: Make "Enregistremnt Logement" Module
+void affAdr_Log(ListeLogement *distination, ListeLogement *source) {
+    distination->adr = source;
+}
+
+
+
+
+//Todo: initLogements, initLocataires
 //******************Modules**************************
 
 
 
-#endif; //TP01_LOG_LLC_BIBLIO_H
+#endif //TP01_LOG_LLC_BIBLIO_H

@@ -74,13 +74,10 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/X360/CLionProjects/TP01/TP1_location_de_logments/Enregistrement Logement.cpp">
-			<Option target="TP01"/>
-		</Unit>
 		<Unit filename="C:/Users/X360/CLionProjects/TP01/TP1_location_de_logments/LOG_LLC_BIBLIO.h">
 			<Option target="TP01"/>
 		</Unit>
-		<Unit filename="C:/Users/X360/CLionProjects/TP01/TP1_location_de_logments/main.c">
+		<Unit filename="C:/Users/X360/CLionProjects/TP01/TP1_location_de_logments/testModule.c">
 			<Option target="TP01"/>
 		</Unit>
 		<Unit filename="C:/Users/X360/CLionProjects/TP01/TP1_location_de_logments/CMakeLists.txt">
