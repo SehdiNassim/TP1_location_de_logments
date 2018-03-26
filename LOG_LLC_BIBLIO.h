@@ -41,9 +41,9 @@ typedef struct Logement {
 //Definition du type Locataire
 typedef struct Locataire {
     int id; //un entier permettant d'identifer le locataire (position dans la liste)
-    char* nom;
-    char* prenom;
-    int numTel;
+    char nom[25];
+    char prenom[25];
+    char numTel[11];
 } FicheLocataire;
 
 //Definition du type Location
@@ -54,8 +54,6 @@ typedef struct Location {
     Date dateFin;
     int loyer;
 } FicheLocation;
-
-//todo: modeles LLC
 
 /* *********************Les modèles de LLC************************/
 typedef struct MaillionLogement {
@@ -90,7 +88,10 @@ FicheLogement ficheLogement(ListeLogement * tete) {
     return tete->fiche;
 }
 
-ListeLogement * suivlogement(ListeLogement * cible) {
+ListeLogement * suivLogement(ListeLogement *cible) {
+    return cible->adr;
+}
+ListeLocataire * suivLocataire(ListeLocataire *cible)  {
     return cible->adr;
 }
 
@@ -98,8 +99,13 @@ void liberLogement(ListeLogement * cible) {
     free(cible);
 }
 
-void affAdr_Log(ListeLogement *distination, ListeLogement *source) {
-    distination->adr = source;
+
+void affAdr_Log(ListeLogement *destination, ListeLogement *source) {
+    destination->adr = source;
+}
+
+void affAdr_Loc(ListeLocataire *destination, ListeLocataire *source) {
+    destination->adr = source;
 }
 
 
@@ -128,10 +134,37 @@ void initLogment(FILE * f, ListeLogement ** tete) { //Role: lire depuis le fichi
         else {
             allouerLog(&nouv);
             affAdr_Log(tmp, nouv);
-            tmp = suivlogement(tmp);
+            tmp = suivLogement(tmp);
         }
     }
     fclose(f);
+}
+
+void initLocataire(FILE * f, ListeLocataire **tete) {
+    ListeLocataire * tmp, *nouv; //2 Maillion intermediare
+    int cpt = 0; //une compteur qui sert a initialiser les id des logements (i.e: leur position dans la liste)
+
+    f = fopen("../locataires", "r"); //ouverture du fichier au mode lecture
+    allouerLoc(&tmp);
+    *tete = tmp;
+    while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
+        fscanf(f, "%[^_]%*s %[^_]%*s %s", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
+        cpt++;
+        tmp->fiche.id = cpt;
+        if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
+            affAdr_Loc(tmp, NULL);
+        }
+        else {
+            allouerLoc(&nouv);
+            affAdr_Loc(tmp, nouv);
+            tmp = suivLocataire(tmp);
+        }
+    }
+    fclose(f);
+}
+
+void initLocation(FILE* f, ListeLocation ** tete) {
+
 }
 
 
