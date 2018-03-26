@@ -28,10 +28,11 @@ typedef struct {
 
 //Definition du type Logement
 typedef struct Logement {
-    int id; //permettant d'identifier le logement
+    int id; //permettant d'identifier le logement, represante reelement la position du maillion dans
+    // la liste
     int type;
     int air;
-    char* nomQuartier;
+    char nomQuartier[25]; //chaine a une taille cste
     int distCommune;
     int distLoyer;
     int Etat; // = 1 si occupé, 0 sinon
@@ -39,7 +40,7 @@ typedef struct Logement {
 
 //Definition du type Locataire
 typedef struct Locataire {
-    int id; //un entier permettant d'idantifer le locataire
+    int id; //un entier permettant d'identifer le locataire (position dans la liste)
     char* nom;
     char* prenom;
     int numTel;
@@ -57,24 +58,22 @@ typedef struct Location {
 //todo: modeles LLC
 
 /* *********************Les modèles de LLC************************/
-//Definition du type Liste Logement (LLC des logements)
 typedef struct MaillionLogement {
     FicheLogement fiche;
     struct MaillionLogement * adr;
 } ListeLogement;
 
-//Definition du type Liste Locataire (LLC des locataires)
 typedef struct MaillionLocataire {
     FicheLocataire fiche;
     struct MaillionLocataire * adr;
 } ListeLocataire;
 
-//Definition du type Liste Location (LLC des Location)
 typedef  struct MaillionLocation {
     FicheLocation fiche;
     struct MaillionLocation * adr;
 } ListeLocation;
 
+//Modeles d'allocation, affectation et autres
 void allouerLog(ListeLogement ** tete) {
     *tete = malloc(sizeof(ListeLogement));
 }
@@ -87,8 +86,16 @@ void allouerLoc(ListeLocataire **tete) {
     *tete = malloc(sizeof(struct MaillionLocataire));
 }
 
-FicheLogement Fiche(ListeLogement * tete) {
+FicheLogement ficheLogement(ListeLogement * tete) {
     return tete->fiche;
+}
+
+ListeLogement * suivlogement(ListeLogement * cible) {
+    return cible->adr;
+}
+
+void liberLogement(ListeLogement * cible) {
+    free(cible);
 }
 
 void affAdr_Log(ListeLogement *distination, ListeLogement *source) {
@@ -100,6 +107,33 @@ void affAdr_Log(ListeLogement *distination, ListeLogement *source) {
 
 //Todo: initLogements, initLocataires
 //******************Modules**************************
+void initLogment(FILE * f, ListeLogement ** tete) { //Role: lire depuis le fichier et cree la liste
+    ListeLogement * tmp, *nouv; //2 Maillion intermediare
+    int cpt = 0; //une compteur qui sert a initialiser les id des logements (i.e: leur position dans la liste)
+
+    f = fopen("../logements", "r"); //ouverture du fichier au mode lecture
+    allouerLog(&tmp);
+    *tete = tmp;
+    while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
+        fscanf(f, "%d %d %[^_]%*s %d %d", &tmp->fiche.type,
+               &tmp->fiche.air,
+               tmp->fiche.nomQuartier,
+               &tmp->fiche.distCommune,
+               &tmp->fiche.distLoyer);
+        cpt++;
+        tmp->fiche.id = cpt;
+        if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
+            affAdr_Log(tmp, NULL);
+        }
+        else {
+            allouerLog(&nouv);
+            affAdr_Log(tmp, nouv);
+            tmp = suivlogement(tmp);
+        }
+    }
+    fclose(f);
+}
+
 
 
 
