@@ -19,10 +19,12 @@ ListeLocation * locations;
 
 
 int main() {
-    initLogment(fLogement, &logements); //initialisation de la liste a partir du fichier
+    //initialisation des listes a partir du fichier
+    initLogement(fLogement, &logements);
     initLocataire(fLocataires, &locataires);
-
-    while (noExit == 1) { // le programme se repete tant que l'utilisateur decide
+    initLocation(fLocations, &locations, logements);
+    // le programme se repete tant que l'utilisateur decide
+    while (noExit == 1) {
         printf("Bienvenue au programme \"Gestion de locations\"\n"
                        "\n\t1.Enregistrer un logement"
                        "\n\t2.Enregistrer un locataire"

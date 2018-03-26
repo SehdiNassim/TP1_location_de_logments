@@ -19,13 +19,6 @@ typedef enum {studio = 0, F1, F2, F3} Typelog;
 const long int LB[F3 + 1] = {15000, 20000, 30000, 40000}; //tableau des LBs
 const int SM[F3 + 1] = {20, 45, 65, 85}; //tableau des SMs
 
-//Definition du type date
-typedef struct {
-    int jour;
-    int mois;
-    int an;
-} Date;
-
 //Definition du type Logement
 typedef struct Logement {
     int id; //permettant d'identifier le logement, represante reelement la position du maillion dans
@@ -48,11 +41,11 @@ typedef struct Locataire {
 
 //Definition du type Location
 typedef struct Location {
-    int idLog;  //Id du logement de la location
-    int idLoc; //Id du locataire du logement
-    Date dateDeb;
-    Date dateFin;
-    int loyer;
+    int idLog;  //Id du logement de logement
+    int idLoc; //Id du locataire du locataire
+    long int dateDeb;  //format date : JJMMAAAA
+    long int dateFin;
+    float loyer;
 } FicheLocation;
 
 /* *********************Les modèles de LLC************************/
@@ -94,7 +87,9 @@ ListeLogement * suivLogement(ListeLogement *cible) {
 ListeLocataire * suivLocataire(ListeLocataire *cible)  {
     return cible->adr;
 }
-
+ListeLocation * suivLocation(ListeLocation *cible) {
+    return cible->adr;
+}
 void liberLogement(ListeLogement * cible) {
     free(cible);
 }
@@ -108,12 +103,41 @@ void affAdr_Loc(ListeLocataire *destination, ListeLocataire *source) {
     destination->adr = source;
 }
 
+void affAdr_Lct(ListeLocation *destination, ListeLocation *source) {
+    destination->adr = source;
+}
 
+ListeLogement * idLogement(ListeLogement * tete,int id) { //retourne l'adresse du maillion a la postion id
+    int cpt = 0;
+    ListeLogement *p = tete;
+
+    if (id != 0) {
+       while (cpt != id && p != NULL) {
+           p = suivLogement(p);
+           cpt++;
+        }
+    }
+    return p;
+}
+
+ListeLocataire * idLocataire(ListeLocataire * tete, int id) {
+    //retourne l'adresse du maillion a la position id
+    int cpt = 0;
+    ListeLocataire *p = tete;
+
+    if (id != 0) {
+        while (cpt != id && p != NULL) {
+            p = suivLocataire(p);
+            cpt++;
+        }
+    }
+    return p;
+}
 
 
 //Todo: initLogements, initLocataires
 //******************Modules**************************
-void initLogment(FILE * f, ListeLogement ** tete) { //Role: lire depuis le fichier et cree la liste
+void initLogement(FILE *f, ListeLogement **tete) { //Role: lire depuis le fichier et cree la liste
     ListeLogement * tmp, *nouv; //2 Maillion intermediare
     int cpt = 0; //une compteur qui sert a initialiser les id des logements (i.e: leur position dans la liste)
 
@@ -163,8 +187,34 @@ void initLocataire(FILE * f, ListeLocataire **tete) {
     fclose(f);
 }
 
-void initLocation(FILE* f, ListeLocation ** tete) {
+void initLocation(FILE* f, ListeLocation ** tete, ListeLogement *teteLog) {
+    ListeLocation *tmp, *nouv; //2 Maillion intermediare
+    ListeLogement *log;
 
+    f = fopen("../locations", "r"); //ouverture du fichier au mode lecture
+    allouerLct(&tmp);
+    *tete = tmp;
+    while (feof(f) == 0) {
+        //lecture jusqu'a arriver a la fin du fichier
+        fscanf(f, "%d %d %ld %ld", &tmp->fiche.idLog, &tmp->fiche.idLoc,
+               &tmp->fiche.dateDeb,
+               &tmp->fiche.dateFin);
+
+        //calcul du loyer
+        log = idLogement(teteLog, tmp->fiche.idLog); //acces au logement specifié par la location
+        tmp->fiche.loyer = LB[log->fiche.type] + (log->fiche.air - SM[log->fiche.type]) * 800;
+
+
+        if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
+            affAdr_Lct(tmp, NULL);
+        }
+        else {
+            allouerLct(&nouv);
+            affAdr_Lct(tmp, nouv);
+            tmp = suivLocation(tmp);
+        }
+    }
+    fclose(f);
 }
 
 
