@@ -217,6 +217,34 @@ void initLocation(FILE* f, ListeLocation ** tete, ListeLogement *teteLog) {
     fclose(f);
 }
 
+void afficherLog(ListeLogement * tete) {
+    ListeLogement *tmp = tete;
+    char * type;
+
+    printf("ID  TYPE     SUPERFICIE  QUARTIER              Dst COMM    Dst LOYER \n");
+    while (tmp != NULL) {
+        switch (tmp->fiche.type) { //Affichage du type du log sous format chaine
+            case 0:
+                type = "Studio";
+                break;
+            case 1:
+                type = "F2";
+                break;
+            case 2:
+                type = "F3";
+                break;
+            case 3:
+                type = "F4";
+                break;
+            default:
+                type = "XXX"; //en cas d'erreur
+        }
+        printf("%2d  %7s  %9dm  %20s  %8dm  %8dm\n", tmp->fiche.id,
+               type, tmp->fiche.air, tmp->fiche.nomQuartier, tmp->fiche.distCommune, tmp->fiche.distLoyer);
+        tmp = suivLogement(tmp);
+    }
+}
+
 
 
 
