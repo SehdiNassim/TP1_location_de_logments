@@ -27,8 +27,8 @@ typedef struct Logement {
     int air;
     char nomQuartier[25]; //chaine a une taille cste
     int distCommune;
-    int distLoyer;
-    int Etat; // = 1 si occupé, 0 sinon
+    //faute de comprehension d'enonce, distLoyer na pas de sense
+    float loyer;
 } FicheLogement;
 
 //Definition du type Locataire
@@ -45,7 +45,7 @@ typedef struct Location {
     int idLoc; //Id du locataire du locataire
     long int dateDeb;  //format date : JJMMAAAA
     long int dateFin;
-    float loyer;
+    //Loyer ne caracterise pas la location
 } FicheLocation;
 
 /* *********************Les modèles de LLC************************/
@@ -135,8 +135,8 @@ ListeLocataire * idLocataire(ListeLocataire * tete, int id) {
 }
 
 
-//Todo: initLogements, initLocataires
 //******************Modules**************************
+
 void initLogement(FILE *f, ListeLogement **tete) { //Role: lire depuis le fichier et cree la liste
     ListeLogement * tmp, *nouv; //2 Maillion intermediare
     int cpt = 0; //une compteur qui sert a initialiser les id des logements (i.e: leur position dans la liste)
@@ -145,13 +145,15 @@ void initLogement(FILE *f, ListeLogement **tete) { //Role: lire depuis le fichie
     allouerLog(&tmp);
     *tete = tmp;
     while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
-        fscanf(f, "%d %d %[^_]%*s %d %d", &tmp->fiche.type,
+        fscanf(f, "%d %d %[^_]%*s %d", &tmp->fiche.type,
                &tmp->fiche.air,
                tmp->fiche.nomQuartier,
-               &tmp->fiche.distCommune,
-               &tmp->fiche.distLoyer);
+               &tmp->fiche.distCommune);
+        //affectation de ID
         cpt++;
         tmp->fiche.id = cpt;
+        //calcul du loyer
+        tmp->fiche.loyer = LB[tmp->fiche.type] + ((tmp->fiche.air - SM[tmp->fiche.type]) * 800);
         if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
             affAdr_Log(tmp, NULL);
         }
@@ -200,11 +202,6 @@ void initLocation(FILE* f, ListeLocation ** tete, ListeLogement *teteLog) {
                &tmp->fiche.dateDeb,
                &tmp->fiche.dateFin);
 
-        //calcul du loyer
-        log = idLogement(teteLog, tmp->fiche.idLog); //acces au logement specifié par la location
-        tmp->fiche.loyer = LB[log->fiche.type] + (log->fiche.air - SM[log->fiche.type]) * 800;
-
-
         if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
             affAdr_Lct(tmp, NULL);
         }
@@ -221,7 +218,7 @@ void afficherLog(ListeLogement * tete) {
     ListeLogement *tmp = tete;
     char * type; //chaine qui contient le type du logement
 
-    printf("ID  TYPE     SUPERFICIE        QUARTIER        Dst COMM    Dst LOYER \n");
+    printf("ID  TYPE     SUPERFICIE        QUARTIER        Dst COMM    LOYER \n");
     while (tmp != NULL) {
         switch (tmp->fiche.type) { //Affichage du type du log sous format chaine
             case 0:
@@ -239,8 +236,8 @@ void afficherLog(ListeLogement * tete) {
             default:
                 type = "XXX"; //en cas d'erreur
         }
-        printf("%2d  %7s  %9dm  %20s  %8dm  %8dm\n", tmp->fiche.id,
-               type, tmp->fiche.air, tmp->fiche.nomQuartier, tmp->fiche.distCommune, tmp->fiche.distLoyer);
+        printf("%2d  %7s  %9dm  %20s  %8dm  %8.0f DZD\n", tmp->fiche.id,
+               type, tmp->fiche.air, tmp->fiche.nomQuartier, tmp->fiche.distCommune, tmp->fiche.loyer);
         tmp = suivLogement(tmp);
     }
 }
@@ -258,7 +255,32 @@ void afficherLoc(ListeLocataire *tete) {
     }
 }
 
+void afficherLct(ListeLocation * tete) {
+    ListeLocation *tmp = tete;
 
+    printf("ID LOG  ID LOC  Date Deb  Date Fin");
+    while (tmp != NULL) {
+        printf("\n%-6d  %-6d  %-8ld  %-8ld",
+               tmp->fiche.idLog, tmp->fiche.idLoc, tmp->fiche.dateDeb, tmp->fiche.dateFin);
+        tmp = suivLocation(tmp);
+    }
+}
+
+/*void ajouterLog(ListeLocation *tete) {
+    //On risque pas de modifier la tete donc on fait pas un passage par var
+    ListeLogement *nouv;
+
+    allouerLog(&nouv); //on alloue un nouveau logement
+    printf("Quel est le type du logement (0:studio, 1:F2, 2:F3, 3:F4) : ");
+    scanf("%d", &nouv->fiche.type);
+    printf("Quel est sa superficie :");
+    scanf("%d", &nouv->fiche.air);
+    printf("Entrez le nom du quartier : ");
+    scanf("%s", nouv->fiche.nomQuartier);
+    printf("Distance entre quartier et commune");
+    scanf("%d", &nouv->fiche.distCommune);
+    printf("Distance entre Loyer et commune")
+}*/
 
 
 #endif //TP01_LOG_LLC_BIBLIO_H

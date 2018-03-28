@@ -32,9 +32,9 @@ int main() {
     while (noExit == 1) {
         system("cls"); //nettoyage de l'ecran a chaque boucle
         printf("Bienvenue au programme \"Gestion de locations\"\n"
-                       "\n\t1.Afficher la liste des logements"
-                       "\n\t2.Afficher la liste des locataires"
-                       "\n\t3.Afficher la liste des locations "
+                       "\n\t1.Afficher la liste des logements existant"
+                       "\n\t2.Afficher la liste des locataires existant"
+                       "\n\t3.Afficher la liste des locations existant"
                        "\n\t4.Ajouter/Supprimer un logement"
                        "\n\t5.Ajouter/Supprimer un locataire"
                        "\n\t6.Ajouter/Supprimer une location"
@@ -55,6 +55,19 @@ int main() {
             case 2:
                 afficherLoc(locataires);
                 getch();
+                break;
+            case 3:
+                afficherLct(locations);
+                getch();
+                break;
+            case 4:
+                printf("1.Ajouter\n2.Supprimer\n0.Retour");
+                int choix2 = 0;
+                scanf("%d", &choix2);
+                //traitement des 2 cas
+                /*switch (choix2) {
+                    case 1:
+                }*/
                 break;
             default:
                 noExit = 0;
