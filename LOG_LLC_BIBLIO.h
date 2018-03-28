@@ -172,7 +172,7 @@ void initLocataire(FILE * f, ListeLocataire **tete) {
     allouerLoc(&tmp);
     *tete = tmp;
     while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
-        fscanf(f, "%[^_]%*s %[^_]%*s %s", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
+        fscanf(f, "%[^_]%*s %[^_]%*s %[^_]%*s", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
         cpt++;
         tmp->fiche.id = cpt;
         if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
@@ -219,9 +219,9 @@ void initLocation(FILE* f, ListeLocation ** tete, ListeLogement *teteLog) {
 
 void afficherLog(ListeLogement * tete) {
     ListeLogement *tmp = tete;
-    char * type;
+    char * type; //chaine qui contient le type du logement
 
-    printf("ID  TYPE     SUPERFICIE  QUARTIER              Dst COMM    Dst LOYER \n");
+    printf("ID  TYPE     SUPERFICIE        QUARTIER        Dst COMM    Dst LOYER \n");
     while (tmp != NULL) {
         switch (tmp->fiche.type) { //Affichage du type du log sous format chaine
             case 0:
@@ -242,6 +242,19 @@ void afficherLog(ListeLogement * tete) {
         printf("%2d  %7s  %9dm  %20s  %8dm  %8dm\n", tmp->fiche.id,
                type, tmp->fiche.air, tmp->fiche.nomQuartier, tmp->fiche.distCommune, tmp->fiche.distLoyer);
         tmp = suivLogement(tmp);
+    }
+}
+
+void afficherLoc(ListeLocataire *tete) {
+    ListeLocataire *tmp = tete;
+
+    printf("NOM %25s PRENOM %23s NUM %18s ID\n","","","");
+
+    while (tmp != NULL) {
+        printf("%-20s %10s%-20s %10s%-12s %10s%d",
+               tmp->fiche.nom, "", tmp->fiche.prenom, "", tmp->fiche.numTel, "",
+               tmp->fiche.id);
+        tmp = suivLocataire(tmp);
     }
 }
 

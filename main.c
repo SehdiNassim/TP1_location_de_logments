@@ -50,6 +50,10 @@ int main() {
         switch (choix) {
             case 1:
                 afficherLog(logements);
+                getch(); //fonction non standard do windows qui pause l'execution jusqua apui sur clavier
+                break;
+            case 2:
+                afficherLoc(locataires);
                 getch();
                 break;
             default:
