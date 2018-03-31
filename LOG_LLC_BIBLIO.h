@@ -139,28 +139,32 @@ ListeLocataire * idLocataire(ListeLocataire * tete, int id) {
 
 void initLogement(FILE *f, ListeLogement **tete) { //Role: lire depuis le fichier et cree la liste
     ListeLogement * tmp, *nouv; //2 Maillion intermediare
-    int cpt = 0; //une compteur qui sert a initialiser les id des logements (i.e: leur position dans la liste)
+    int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
 
-    f = fopen("../logements", "r"); //ouverture du fichier au mode lecture
-    allouerLog(&tmp);
-    *tete = tmp;
-    while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
-        fscanf(f, "%d %d %[^_]%*s %d", &tmp->fiche.type,
-               &tmp->fiche.air,
-               tmp->fiche.nomQuartier,
-               &tmp->fiche.distCommune);
-        //affectation de ID
-        cpt++;
-        tmp->fiche.id = cpt;
-        //calcul du loyer
-        tmp->fiche.loyer = LB[tmp->fiche.type] + ((tmp->fiche.air - SM[tmp->fiche.type]) * 800);
-        if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
-            affAdr_Log(tmp, NULL);
-        }
-        else {
-            allouerLog(&nouv);
-            affAdr_Log(tmp, nouv);
-            tmp = suivLogement(tmp);
+    system("pwd");
+    f = fopen("../logements.txt", "r"); //ouverture du fichier au mode lecture
+    rewind(f);
+    if (f == NULL) perror("fopen");
+    else {
+        allouerLog(&tmp);
+        *tete = tmp;
+        while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
+            fscanf(f, "%d %d %[^_]%*s %d", &tmp->fiche.type,
+                   &tmp->fiche.air,
+                   tmp->fiche.nomQuartier,
+                   &tmp->fiche.distCommune);
+            //affectation de ID
+            cpt++;
+            tmp->fiche.id = cpt;
+            //calcul du loyer
+            tmp->fiche.loyer = LB[tmp->fiche.type] + ((tmp->fiche.air - SM[tmp->fiche.type]) * 800);
+            if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
+                affAdr_Log(tmp, NULL);
+            } else {
+                allouerLog(&nouv);
+                affAdr_Log(tmp, nouv);
+                tmp = suivLogement(tmp);
+            }
         }
     }
     fclose(f);
@@ -168,9 +172,9 @@ void initLogement(FILE *f, ListeLogement **tete) { //Role: lire depuis le fichie
 
 void initLocataire(FILE * f, ListeLocataire **tete) {
     ListeLocataire * tmp, *nouv; //2 Maillion intermediare
-    int cpt = 0; //une compteur qui sert a initialiser les id des logements (i.e: leur position dans la liste)
+    int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
 
-    f = fopen("../locataires", "r"); //ouverture du fichier au mode lecture
+    f = fopen("../locataires.txt", "r"); //ouverture du fichier au mode lecture
     allouerLoc(&tmp);
     *tete = tmp;
     while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
@@ -193,7 +197,7 @@ void initLocation(FILE* f, ListeLocation ** tete, ListeLogement *teteLog) {
     ListeLocation *tmp, *nouv; //2 Maillion intermediare
     ListeLogement *log;
 
-    f = fopen("../locations", "r"); //ouverture du fichier au mode lecture
+    f = fopen("../locations.txt", "r"); //ouverture du fichier au mode lecture
     allouerLct(&tmp);
     *tete = tmp;
     while (feof(f) == 0) {
@@ -210,6 +214,24 @@ void initLocation(FILE* f, ListeLocation ** tete, ListeLogement *teteLog) {
             affAdr_Lct(tmp, nouv);
             tmp = suivLocation(tmp);
         }
+    }
+    fclose(f);
+}
+
+void sauvLogement(ListeLogement *tete, FILE *f) {
+    ListeLogement *tmp = tete;
+
+    f = fopen("../logements.txt", "w"); //ouverture en ecriture
+    if (f != NULL) {
+        while (tmp != NULL) {
+            fprintf(f, "%d %d %s_ %d",
+                    tmp->fiche.type, tmp->fiche.air, tmp->fiche.nomQuartier, tmp->fiche.distCommune);
+            tmp = suivLogement(tmp);
+            if (tmp != NULL)
+                fprintf(f, "\n");
+        }
+    } else {
+        perror("fopen");
     }
     fclose(f);
 }

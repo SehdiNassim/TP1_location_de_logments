@@ -73,6 +73,7 @@ int main() {
                 noExit = 0;
                 break;
         }
+        sauvLogement(logements, fLogement); //sauvegrade de toute modifications
     }
     return 0;
 }
