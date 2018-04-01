@@ -18,14 +18,16 @@ ListeLocataire * locataires;
 ListeLogement * logements;
 ListeLocation * locations;
 
-
+//les variables suivantes seront modifiees a chaque ajout, suppression, etc..
+int idLogements; //dernier Id de la liste logements
+int idLocataires; //dernier Id de la liste locataires
 
 int main() {
     int choix;
     //initialisation des listes a partir du fichier
-    initLogement(fLogement, &logements);
-    initLocataire(fLocataires, &locataires);
-    initLocation(fLocations, &locations, logements);
+    initLogement(fLogement, &logements, &idLogements);
+    initLocataire(fLocataires, &locataires, &idLocataires);
+    initLocation(fLocations, &locations);
 
 
     // le programme se repete tant que l'utilisateur decide

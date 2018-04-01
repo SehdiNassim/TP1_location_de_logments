@@ -90,10 +90,10 @@ ListeLocataire * suivLocataire(ListeLocataire *cible)  {
 ListeLocation * suivLocation(ListeLocation *cible) {
     return cible->adr;
 }
+
 void liberLogement(ListeLogement * cible) {
     free(cible);
 }
-
 
 void affAdr_Log(ListeLogement *destination, ListeLogement *source) {
     destination->adr = source;
@@ -137,7 +137,7 @@ ListeLocataire * idLocataire(ListeLocataire * tete, int id) {
 
 //******************Modules**************************
 
-void initLogement(FILE *f, ListeLogement **tete) { //Role: lire depuis le fichier et cree la liste
+void initLogement(FILE *f, ListeLogement **tete, int *cptId) { //Role: lire depuis le fichier et cree la liste
     ListeLogement * tmp, *nouv; //2 Maillion intermediare
     int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
 
@@ -166,53 +166,62 @@ void initLogement(FILE *f, ListeLogement **tete) { //Role: lire depuis le fichie
                 tmp = suivLogement(tmp);
             }
         }
+        *cptId = cpt; //ceci represente implicitement la longueur de la liste
+        // mais sert aussi a l'ajout des nouveaux logements (pour eviter le parcours a
+        // chque ajout/suppression)
     }
     fclose(f);
 }
 
-void initLocataire(FILE * f, ListeLocataire **tete) {
+void initLocataire(FILE * f, ListeLocataire **tete, int *cptId) {
     ListeLocataire * tmp, *nouv; //2 Maillion intermediare
     int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
 
     f = fopen("../locataires.txt", "r"); //ouverture du fichier au mode lecture
-    allouerLoc(&tmp);
-    *tete = tmp;
-    while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
-        fscanf(f, "%[^_]%*s %[^_]%*s %[^_]%*s", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
-        cpt++;
-        tmp->fiche.id = cpt;
-        if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
-            affAdr_Loc(tmp, NULL);
+    if (f == NULL) {
+        perror("fopen");
+    } else {
+        allouerLoc(&tmp);
+        *tete = tmp;
+        while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
+            fscanf(f, "%[^_]%*s %[^_]%*s %[^_]%*s", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
+            cpt++;
+            tmp->fiche.id = cpt;
+            if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture (i.e: derniere ligne)
+                affAdr_Loc(tmp, NULL);
+            } else {
+                allouerLoc(&nouv);
+                affAdr_Loc(tmp, nouv);
+                tmp = suivLocataire(tmp);
+            }
         }
-        else {
-            allouerLoc(&nouv);
-            affAdr_Loc(tmp, nouv);
-            tmp = suivLocataire(tmp);
-        }
+        *cptId = cpt; //meme chose pour initLogement
     }
     fclose(f);
 }
 
-void initLocation(FILE* f, ListeLocation ** tete, ListeLogement *teteLog) {
+void initLocation(FILE* f, ListeLocation ** tete) {
     ListeLocation *tmp, *nouv; //2 Maillion intermediare
-    ListeLogement *log;
 
     f = fopen("../locations.txt", "r"); //ouverture du fichier au mode lecture
-    allouerLct(&tmp);
-    *tete = tmp;
-    while (feof(f) == 0) {
-        //lecture jusqu'a arriver a la fin du fichier
-        fscanf(f, "%d %d %ld %ld", &tmp->fiche.idLog, &tmp->fiche.idLoc,
-               &tmp->fiche.dateDeb,
-               &tmp->fiche.dateFin);
+    if (f == NULL) {
+        perror("fopen");
+    } else {
+        allouerLct(&tmp);
+        *tete = tmp;
+        while (feof(f) == 0) {
+            //lecture jusqu'a arriver a la fin du fichier
+            fscanf(f, "%d %d %ld %ld", &tmp->fiche.idLog, &tmp->fiche.idLoc,
+                   &tmp->fiche.dateDeb,
+                   &tmp->fiche.dateFin);
 
-        if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
-            affAdr_Lct(tmp, NULL);
-        }
-        else {
-            allouerLct(&nouv);
-            affAdr_Lct(tmp, nouv);
-            tmp = suivLocation(tmp);
+            if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
+                affAdr_Lct(tmp, NULL);
+            } else {
+                allouerLct(&nouv);
+                affAdr_Lct(tmp, nouv);
+                tmp = suivLocation(tmp);
+            }
         }
     }
     fclose(f);
@@ -288,21 +297,42 @@ void afficherLct(ListeLocation * tete) {
     }
 }
 
-/*void ajouterLog(ListeLocation *tete) {
+/*void ajouterLog(ListeLogement *tete, int *id) {
     //On risque pas de modifier la tete donc on fait pas un passage par var
     ListeLogement *nouv;
 
     allouerLog(&nouv); //on alloue un nouveau logement
-    printf("Quel est le type du logement (0:studio, 1:F2, 2:F3, 3:F4) : ");
-    scanf("%d", &nouv->fiche.type);
+    //lecture des infirmations essentiels apartir du clavier
+    do {
+        printf("Quel est le type du logement (0:studio, 1:F2, 2:F3, 3:F4) : ");
+        scanf("%d", &nouv->fiche.type);
+    } while (nouv->fiche.type <= 3 && nouv->fiche.type >= 0);
+
     printf("Quel est sa superficie :");
     scanf("%d", &nouv->fiche.air);
+
     printf("Entrez le nom du quartier : ");
     scanf("%s", nouv->fiche.nomQuartier);
+
     printf("Distance entre quartier et commune");
     scanf("%d", &nouv->fiche.distCommune);
-    printf("Distance entre Loyer et commune")
+
+    //calcul de loyer
+    nouv->fiche.loyer = LB[nouv->fiche.type] + (nouv->fiche.air - SM[nouv->fiche.type]) * 800;
+
+    //affectation d'id
+    (*id)++; //incrementation car on ajoute un nouveau logement
+    nouv->fiche.id = *id;
+
+    //chainage dans la liste
+    ListeLogement *dernier = idLogement(tete, (*id)-1); //le dernier maillion de la liste
+    affAdr_Log(dernier, nouv);
+    
+    //Affichage des modifications
+    printf("\n Votre logement a pour ID: %d\n", nouv->fiche.id);
+    printf("\n Le Loyer est de: %.0f DZD", nouv->fiche.loyer);
 }*/
 
+//todo: Module SuppLogement(), a toi de reflichir nassim
 
 #endif //TP01_LOG_LLC_BIBLIO_H
