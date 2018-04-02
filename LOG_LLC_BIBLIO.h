@@ -108,30 +108,44 @@ void affAdr_Lct(ListeLocation *destination, ListeLocation *source) {
 }
 
 ListeLogement * idLogement(ListeLogement * tete,int id) { //retourne l'adresse du maillion a la postion id
-    int cpt = 0;
+    int cpt = 1;
     ListeLogement *p = tete;
 
-    if (id != 0) {
-       while (cpt != id && p != NULL) {
-           p = suivLogement(p);
-           cpt++;
-        }
+    if (id == 1) {
+        return tete;
     }
-    return p;
+    else {
+        if (id != 0) {
+            while (cpt != id && p != NULL) {
+                p = suivLogement(p);
+                cpt++;
+            }
+            return p;
+        }
+        else
+            return NULL;
+    }
 }
 
 ListeLocataire * idLocataire(ListeLocataire * tete, int id) {
     //retourne l'adresse du maillion a la position id
-    int cpt = 0;
+    int cpt = 1;
     ListeLocataire *p = tete;
 
-    if (id != 0) {
-        while (cpt != id && p != NULL) {
-            p = suivLocataire(p);
-            cpt++;
-        }
+    if (id == 1) {
+        return tete;
     }
-    return p;
+    else {
+        if (id != 0) {
+            while (cpt < id && p != NULL) {
+                p = suivLocataire(p);
+                cpt++;
+            }
+            return p;
+        }
+        else
+            return NULL;
+    }
 }
 
 
@@ -297,7 +311,7 @@ void afficherLct(ListeLocation * tete) {
     }
 }
 
-/*void ajouterLog(ListeLogement *tete, int *id) {
+void ajouterLog(ListeLogement *tete, int *id) {
     //On risque pas de modifier la tete donc on fait pas un passage par var
     ListeLogement *nouv;
 
@@ -306,13 +320,14 @@ void afficherLct(ListeLocation * tete) {
     do {
         printf("Quel est le type du logement (0:studio, 1:F2, 2:F3, 3:F4) : ");
         scanf("%d", &nouv->fiche.type);
-    } while (nouv->fiche.type <= 3 && nouv->fiche.type >= 0);
+    } while (nouv->fiche.type > 3 || nouv->fiche.type < 0);
 
     printf("Quel est sa superficie :");
     scanf("%d", &nouv->fiche.air);
+    fflush(stdin);
 
     printf("Entrez le nom du quartier : ");
-    scanf("%s", nouv->fiche.nomQuartier);
+    scanf("%[^.]%*s", nouv->fiche.nomQuartier);
 
     printf("Distance entre quartier et commune");
     scanf("%d", &nouv->fiche.distCommune);
@@ -326,12 +341,17 @@ void afficherLct(ListeLocation * tete) {
 
     //chainage dans la liste
     ListeLogement *dernier = idLogement(tete, (*id)-1); //le dernier maillion de la liste
+    printf("%p", dernier);
+    getch();
     affAdr_Log(dernier, nouv);
-    
+    affAdr_Log(nouv, NULL);
+    printf("Chainage fait");
+    getch();
+
     //Affichage des modifications
     printf("\n Votre logement a pour ID: %d\n", nouv->fiche.id);
     printf("\n Le Loyer est de: %.0f DZD", nouv->fiche.loyer);
-}*/
+}
 
 //todo: Module SuppLogement(), a toi de reflichir nassim
 

@@ -6,3 +6,6 @@
 3 105 Les Falaises_ 200
 1 45 USTO_ 80
 1 67 Akid Lotfi_ 98
+0 34 USTO_ 230
+0 43 USTO_ 340
+3 97 Akid Lotfi_ 409

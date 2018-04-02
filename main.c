@@ -67,15 +67,22 @@ int main() {
                 int choix2 = 0;
                 scanf("%d", &choix2);
                 //traitement des 2 cas
-                /*switch (choix2) {
+                switch (choix2) {
                     case 1:
-                }*/
+                        ajouterLog(logements, &idLogements);
+                        getch();
+                        break;
+                    /*case 2:
+                     * Module suppLogement, a toi nassim */
+                    default:
+                        break;
+                }
                 break;
             default:
                 noExit = 0;
                 break;
         }
-        sauvLogement(logements, fLogement); //sauvegrade de toute modifications
     }
+    sauvLogement(logements, fLogement); //sauvegrade de toute modifications
     return 0;
 }
