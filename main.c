@@ -83,6 +83,10 @@ int main() {
                 break;
         }
     }
-    sauvLogement(logements, fLogement); //sauvegrade de toute modifications
+    //sauvegrade de toute modifications
+    liberLogement(logements);
+    sauvLogement(logements, fLogement);
+    sauvLocataire(locataires, fLocataires);
+    sauvLocation(locations, fLocations);
     return 0;
 }

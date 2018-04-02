@@ -259,6 +259,32 @@ void sauvLogement(ListeLogement *tete, FILE *f) {
     fclose(f);
 }
 
+void sauvLocataire(ListeLocataire *tete, FILE *f) {
+    ListeLocataire *tmp;
+
+    f = fopen("../locataires.txt", "w");
+    tmp = tete;
+    while (tmp != NULL) {
+        fprintf(f, "%s_ %s_ %s_", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
+        tmp = suivLocataire(tmp);
+    }
+}
+
+void sauvLocation(ListeLocation *tete, FILE *f) {
+    ListeLocation *tmp;
+
+    f = fopen("../locations.txt", "w");
+    tmp = tete;
+    while (tmp != NULL) {
+        fprintf(f, "%d %d %ld %ld",
+                tmp->fiche.idLog, tmp->fiche.idLoc, tmp->fiche.dateDeb, tmp->fiche.dateFin);
+        tmp = suivLocation(tmp);
+        if (tmp != NULL) {
+            fprintf(f, "\n");
+        }
+    }
+}
+
 void afficherLog(ListeLogement * tete) {
     ListeLogement *tmp = tete;
     char * type; //chaine qui contient le type du logement
@@ -324,7 +350,8 @@ void ajouterLog(ListeLogement *tete, int *id) {
 
     printf("Quel est sa superficie :");
     scanf("%d", &nouv->fiche.air);
-    fflush(stdin);
+    fflush(stdin); //sert a restaurer le fichier d'entree pour eviter la lecture du \n dans
+    // la lecture du nom de quartier
 
     printf("Entrez le nom du quartier : ");
     scanf("%[^.]%*s", nouv->fiche.nomQuartier);
@@ -353,6 +380,6 @@ void ajouterLog(ListeLogement *tete, int *id) {
     printf("\n Le Loyer est de: %.0f DZD", nouv->fiche.loyer);
 }
 
-//todo: Module SuppLogement(), a toi de reflichir nassim
+//todo: Module SuppLogement() et autres, a toi de reflichir nassim
 
 #endif //TP01_LOG_LLC_BIBLIO_H
