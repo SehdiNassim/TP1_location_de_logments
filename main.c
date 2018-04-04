@@ -82,6 +82,10 @@ int main() {
                 ajouterLoc(locataires, &idLocataires);
                 getch();
                 break;
+            case 6:
+                ajouterLct(locations);
+                getch();
+                break;
             default:
                 noExit = 0;
                 break;

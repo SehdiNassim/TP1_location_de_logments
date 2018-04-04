@@ -414,6 +414,33 @@ void ajouterLoc(ListeLocataire *tete, int *id) {
     printf("Votre locataire a pour ID : %d", nouv->fiche.id);
 }
 
+void ajouterLct(ListeLocation *tete) {
+    //allocaion
+    ListeLocation *nouv;
+    allouerLct(&nouv);
+
+    //Lecure des information depuis le clavier
+    printf("Entrez l'ID du logement (voir la liste des logements) : ");
+    scanf("%d", &nouv->fiche.idLog);
+
+    printf("Entrez l'ID du locatair (voir la liste des locatiares) : ");
+    scanf("%d", &nouv->fiche.idLoc);
+
+    printf("Entrez la date du debut sous la forme JJMMAAAA : ");
+    scanf("%ld", &nouv->fiche.dateDeb);
+
+    printf("Entrez la date de fin sous la forme JJMMAAAA : ");
+    scanf("%ld", &nouv->fiche.dateFin);
+
+    //chainage
+    ListeLocation *dernier = tete;
+    while (suivLocation(dernier) != NULL) {
+        dernier = suivLocation(dernier);
+    }
+    affAdr_Lct(dernier, nouv);
+    affAdr_Lct(nouv, NULL);
+}
+
 //todo: Module SuppLogement() et autres, a toi de reflichir nassim
 
 #endif //TP01_LOG_LLC_BIBLIO_H

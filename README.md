@@ -1,4 +1,5 @@
 # TP1_location_de_logments
-This is a study project
+Projet d'etudes.
 
-We are two students making a console application for managing houses loans.
+NOTE: Les fichier de lecture doivent se trouver dans un repertoire parent du l'excutable.
+
