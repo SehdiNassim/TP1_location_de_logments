@@ -63,7 +63,7 @@ int main() {
                 getch();
                 break;
             case 4:
-                printf("1.Ajouter\n2.Supprimer\n0.Retour");
+                printf("1.Ajouter\n2.Supprimer\n0.Retour\n");
                 int choix2 = 0;
                 scanf("%d", &choix2);
                 //traitement des 2 cas
@@ -78,15 +78,19 @@ int main() {
                         break;
                 }
                 break;
+            case 5: //reste a ajouter ici suppLocataire()
+                ajouterLoc(locataires, &idLocataires);
+                getch();
+                break;
             default:
                 noExit = 0;
                 break;
         }
     }
     //sauvegrade de toute modifications
-    liberLogement(logements);
     sauvLogement(logements, fLogement);
     sauvLocataire(locataires, fLocataires);
     sauvLocation(locations, fLocations);
+    liberLogement(logements);
     return 0;
 }

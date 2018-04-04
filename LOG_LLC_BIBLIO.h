@@ -92,7 +92,15 @@ ListeLocation * suivLocation(ListeLocation *cible) {
 }
 
 void liberLogement(ListeLogement * cible) {
-    free(cible);
+    //Liberation de tout la liste de la memoire
+    ListeLogement *tmp, *prec;
+
+    tmp = cible;
+    while (tmp != NULL) {
+        prec = tmp;
+        tmp = suivLogement(tmp);
+        free(prec);
+    }
 }
 
 void affAdr_Log(ListeLogement *destination, ListeLogement *source) {
@@ -155,9 +163,7 @@ void initLogement(FILE *f, ListeLogement **tete, int *cptId) { //Role: lire depu
     ListeLogement * tmp, *nouv; //2 Maillion intermediare
     int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
 
-    system("pwd");
     f = fopen("../logements.txt", "r"); //ouverture du fichier au mode lecture
-    rewind(f);
     if (f == NULL) perror("fopen");
     else {
         allouerLog(&tmp);
@@ -198,7 +204,7 @@ void initLocataire(FILE * f, ListeLocataire **tete, int *cptId) {
         allouerLoc(&tmp);
         *tete = tmp;
         while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
-            fscanf(f, "%[^_]%*s %[^_]%*s %[^_]%*s", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
+            fscanf(f, "%[^_]%*s %[^_]%*s %s\n", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
             cpt++;
             tmp->fiche.id = cpt;
             if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture (i.e: derniere ligne)
@@ -267,6 +273,8 @@ void sauvLocataire(ListeLocataire *tete, FILE *f) {
     while (tmp != NULL) {
         fprintf(f, "%s_ %s_ %s_", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
         tmp = suivLocataire(tmp);
+        if (tmp != NULL)
+            fprintf(f, "\n");
     }
 }
 
@@ -319,7 +327,7 @@ void afficherLoc(ListeLocataire *tete) {
     printf("NOM %25s PRENOM %23s NUM %18s ID\n","","","");
 
     while (tmp != NULL) {
-        printf("%-20s %10s%-20s %10s%-12s %10s%d",
+        printf("%-20s %10s%-20s %10s%-12s %10s %d\n",
                tmp->fiche.nom, "", tmp->fiche.prenom, "", tmp->fiche.numTel, "",
                tmp->fiche.id);
         tmp = suivLocataire(tmp);
@@ -353,10 +361,10 @@ void ajouterLog(ListeLogement *tete, int *id) {
     fflush(stdin); //sert a restaurer le fichier d'entree pour eviter la lecture du \n dans
     // la lecture du nom de quartier
 
-    printf("Entrez le nom du quartier : ");
+    printf("Entrez le nom du quartier (terminant par \".\"): ");
     scanf("%[^.]%*s", nouv->fiche.nomQuartier);
 
-    printf("Distance entre quartier et commune");
+    printf("Distance entre quartier et commune : ");
     scanf("%d", &nouv->fiche.distCommune);
 
     //calcul de loyer
@@ -368,16 +376,42 @@ void ajouterLog(ListeLogement *tete, int *id) {
 
     //chainage dans la liste
     ListeLogement *dernier = idLogement(tete, (*id)-1); //le dernier maillion de la liste
-    printf("%p", dernier);
-    getch();
     affAdr_Log(dernier, nouv);
     affAdr_Log(nouv, NULL);
-    printf("Chainage fait");
-    getch();
 
     //Affichage des modifications
     printf("\n Votre logement a pour ID: %d\n", nouv->fiche.id);
     printf("\n Le Loyer est de: %.0f DZD", nouv->fiche.loyer);
+}
+
+void ajouterLoc(ListeLocataire *tete, int *id) {
+    //allocation d'un nouveau maillion
+    ListeLocataire *nouv;
+    allouerLoc(&nouv);
+
+    //On lit depuis le clavier
+    fflush(stdin);
+    printf("Entrez le nom du locataire (terminon par \".\") :");
+    scanf("%[^.]%*s", nouv->fiche.nom);
+    fflush(stdin);
+
+    printf("Entrez le prenom du locataire (terminon par \".\") : ");
+    scanf("%[^.]%*s", nouv->fiche.prenom);
+    fflush(stdin);
+
+    printf("Entre le numero du telephone (terminon par \".\") : ");
+    scanf("%[^.]%*s", nouv->fiche.numTel);
+
+    //Chainage
+    ListeLocataire *dernier = idLocataire(tete, *id);
+    affAdr_Loc(dernier, nouv);
+    affAdr_Loc(nouv, NULL);
+
+    //Affectation d'ID
+    (*id)++;
+    nouv->fiche.id = *id;
+
+    printf("Votre locataire a pour ID : %d", nouv->fiche.id);
 }
 
 //todo: Module SuppLogement() et autres, a toi de reflichir nassim
