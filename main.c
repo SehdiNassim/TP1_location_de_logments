@@ -40,7 +40,7 @@ int main() {
                        "\n\t4.Ajouter/Supprimer un logement"
                        "\n\t5.Ajouter/Supprimer un locataire"
                        "\n\t6.Ajouter/Supprimer une location"
-                       "\n\t7.Lister Logement Occupe"
+                       "\n\t7.Lister les logements selon une date"
                        "\n\t8.Lister Logements libre a une date"
                        "\n\t9.Consulter L'historique par annee"
                        "\n\t10.Quitter"
@@ -86,6 +86,10 @@ int main() {
                 ajouterLct(locations);
                 getch();
                 break;
+            case 7:
+                printf("Entrez date sous forme JJMMAAAA");
+                long int date = 0;
+                scanf("%ld", &date);
             default:
                 noExit = 0;
                 break;
@@ -95,6 +99,9 @@ int main() {
     sauvLogement(logements, fLogement);
     sauvLocataire(locataires, fLocataires);
     sauvLocation(locations, fLocations);
+    //puis on libere la memoire
     liberLogement(logements);
+    liberLocation(locations);
+    liberLocataire(locataires);
     return 0;
 }

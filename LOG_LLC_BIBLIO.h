@@ -103,6 +103,30 @@ void liberLogement(ListeLogement * cible) {
     }
 }
 
+void liberLocataire(ListeLocataire * cible) {
+    //Liberation de tout la liste de la memoire
+    ListeLocataire *tmp, *prec;
+
+    tmp = cible;
+    while (tmp != NULL) {
+        prec = tmp;
+        tmp = suivLocataire(tmp);
+        free(prec);
+    }
+}
+
+void liberLocation(ListeLocation * cible) {
+    //Liberation de tout la liste de la memoire
+    ListeLocation *tmp, *prec;
+
+    tmp = cible;
+    while (tmp != NULL) {
+        prec = tmp;
+        tmp = suivLocation(tmp);
+        free(prec);
+    }
+}
+
 void affAdr_Log(ListeLogement *destination, ListeLogement *source) {
     destination->adr = source;
 }
@@ -271,7 +295,7 @@ void sauvLocataire(ListeLocataire *tete, FILE *f) {
     f = fopen("../locataires.txt", "w");
     tmp = tete;
     while (tmp != NULL) {
-        fprintf(f, "%s_ %s_ %s_", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
+        fprintf(f, "%s_ %s_ %s", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
         tmp = suivLocataire(tmp);
         if (tmp != NULL)
             fprintf(f, "\n");
@@ -336,11 +360,22 @@ void afficherLoc(ListeLocataire *tete) {
 
 void afficherLct(ListeLocation * tete) {
     ListeLocation *tmp = tete;
+    int jour, mois, an;
 
     printf("ID LOG  ID LOC  Date Deb  Date Fin");
     while (tmp != NULL) {
-        printf("\n%-6d  %-6d  %-8ld  %-8ld",
-               tmp->fiche.idLog, tmp->fiche.idLoc, tmp->fiche.dateDeb, tmp->fiche.dateFin);
+        an = tmp->fiche.dateDeb % 10000;
+        mois = tmp->fiche.dateDeb / 10000 % 100;
+        jour = tmp->fiche.dateDeb / 10000 / 100;
+
+        printf("\n%-6d  %-6d  %d/%d/%-8d  ",
+               tmp->fiche.idLog, tmp->fiche.idLoc, jour, mois, an);
+
+        an = tmp->fiche.dateFin % 10000;
+        mois = tmp->fiche.dateFin / 10000 % 100;
+        jour = tmp->fiche.dateFin / 10000 / 100;
+
+        printf("%d/%d/%-8d", jour, mois, an);
         tmp = suivLocation(tmp);
     }
 }
@@ -442,5 +477,42 @@ void ajouterLct(ListeLocation *tete) {
 }
 
 //todo: Module SuppLogement() et autres, a toi de reflichir nassim
+
+void affichLogDate(ListeLogement *teteLog, ListeLocation *teteLct, long int date) {
+    ListeLogement *log = teteLog;
+    ListeLocation *lct = teteLct;
+    char *etat, *type;
+
+    printf("LOGEMENTS                ETAT");
+    while (log != NULL) {
+        while (lct != NULL) {
+            if (lct->fiche.idLog == log->fiche.id) {
+                if (date <= lct->fiche.dateFin && date >= lct->fiche.dateDeb)
+                    etat = "Occuppé";
+            }
+            else
+                etat = "Libre";
+            switch (log->fiche.type) { //Affichage du type du log sous format chaine
+                case 0:
+                    type = "Studio";
+                    break;
+                case 1:
+                    type = "F2";
+                    break;
+                case 2:
+                    type = "F3";
+                    break;
+                case 3:
+                    type = "F4";
+                    break;
+                default:
+                    type = "XXX"; //en cas d'erreur
+            }
+            printf("%d %s %d %s", log->fiche.id, type, log->fiche.air, log->fiche.nomQuartier, etat);
+            lct = suivLocation(lct);
+        }
+        log = suivLogement(log);
+    }
+}
 
 #endif //TP01_LOG_LLC_BIBLIO_H
