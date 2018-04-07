@@ -90,6 +90,9 @@ int main() {
                 printf("Entrez date sous forme JJMMAAAA");
                 long int date = 0;
                 scanf("%ld", &date);
+                affichLogDate(logements, locations, date);
+                getch();
+                break;
             default:
                 noExit = 0;
                 break;

@@ -478,38 +478,79 @@ void ajouterLct(ListeLocation *tete) {
 
 //todo: Module SuppLogement() et autres, a toi de reflichir nassim
 
+int compareDate(long int date1, long int date2) {
+    //retourne 0 si: date1 == date2, 1 si: date1 > date2, -1 si: date1 < date2
+    int jour1, mois1, an1;
+    int jour2, mois2, an2;
+
+    an1 = date1 % 10000;
+    mois1 = date1 % 10000 % 100;
+    jour1 = date1 % 10000 / 100;
+
+    an2 = date2 % 10000;
+    mois2 = date2 % 10000 % 100;
+    jour2 = date2 % 10000 / 100;
+
+    if (date1==date2)
+        return 0;
+
+    else {
+        if (an1 > an2 ||(an1 == an2 && mois1 > mois2) || (an1 == an2 && mois1 == mois2 && jour1 > jour2))
+            return 1;
+        else
+            return -1;
+    }
+}
+
 void affichLogDate(ListeLogement *teteLog, ListeLocation *teteLct, long int date) {
     ListeLogement *log = teteLog;
     ListeLocation *lct = teteLct;
-    char *etat, *type;
+    char *type, *etat;
 
-    printf("LOGEMENTS                ETAT");
+    printf("LOGEMENTS                ETAT\n");
     while (log != NULL) {
-        while (lct != NULL) {
-            if (lct->fiche.idLog == log->fiche.id) {
-                if (date <= lct->fiche.dateFin && date >= lct->fiche.dateDeb)
-                    etat = "Occuppé";
+
+        switch (log->fiche.type) { //Affichage du type du log sous format chaine
+            case 0:
+                type = "Studio";
+                break;
+            case 1:
+                type = "F2";
+                break;
+            case 2:
+                type = "F3";
+                break;
+            case 3:
+                type = "F4";
+                break;
+            default:
+                type = "XXX"; //en cas d'erreur
+        }
+
+
+        int trouv = 0;
+        while (lct != NULL && !trouv) {
+            if (lct->fiche.idLog == log->fiche.id) { //si le logement est louée
+                trouv = 1;
+                int cmpFin = compareDate(date, lct->fiche.dateFin); // on compare la date donnée avec la date de fin
+                int cmpDeb = compareDate(date, lct->fiche.dateDeb); //on compara la date donnée avec la date de debut
+                if ((cmpFin == 0 || cmpFin == 1) && (cmpDeb == 0 || cmpDeb == -1)) { //voir si il est occupé a la date donne
+                    etat = "Occuppe";
+                }
+                else {
+                    etat = "Libre";//logement se trouve dans les locations mais libre dans la date donne
+                }
+                printf("%d %s %d %s%s\n", log->fiche.id, type, log->fiche.air, log->fiche.nomQuartier, etat);
             }
-            else
-                etat = "Libre";
-            switch (log->fiche.type) { //Affichage du type du log sous format chaine
-                case 0:
-                    type = "Studio";
-                    break;
-                case 1:
-                    type = "F2";
-                    break;
-                case 2:
-                    type = "F3";
-                    break;
-                case 3:
-                    type = "F4";
-                    break;
-                default:
-                    type = "XXX"; //en cas d'erreur
-            }
-            printf("%d %s %d %s", log->fiche.id, type, log->fiche.air, log->fiche.nomQuartier, etat);
             lct = suivLocation(lct);
+            if (lct == NULL && trouv == 0) {
+                etat = "Libre"; //logement ne se trouve pas dans les locations
+                printf("%d %s %d %s%s\n", log->fiche.id, type, log->fiche.air, log->fiche.nomQuartier, etat);
+            }
+        }
+        if (lct == NULL) { //fin des locations
+            etat = "Libre";
+            printf("%d %s %d %s%s\n", log->fiche.id, type, log->fiche.air, log->fiche.nomQuartier, etat);
         }
         log = suivLogement(log);
     }
