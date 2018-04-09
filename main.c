@@ -4,7 +4,7 @@
  * Edite par:  Benmoussat Mouad Sehdi Nassim
  * **********************************************************************/
 
-#include <stdio.h> //Bibliotheque necessaire pour les entrees sories
+#include <stdio.h> //Bibliotheques necessaire pour les entrees sories
 #include <conio.h>
 #include "LOG_LLC_BIBLIO.h"
 
@@ -114,13 +114,12 @@ int main() {
                 //traitement des 2 cas
                 switch (choix4) {
                     case 1:
-                        ajouterLct(locations);
+                        ajouterLct(locations, idLogements, idLocataires);
                         getch();
                         break;
                     case 2:
                         supp_location(&locations,&archivelocation);
                         getch();
-                        /* Module suppLogement, a toi nassim */
                     default:
                         break;
                 }

@@ -574,17 +574,48 @@ void ajouterLoc(ListeLocataire *tete, int *id) {
     printf("Votre locataire a pour ID : %d", nouv->fiche.id);
 }
 
-void ajouterLct(ListeLocation *tete) {
+void ajouterLct(ListeLocation *tete, int dernierIdLog, int dernierIdLoc) {
     //allocaion
     ListeLocation *nouv;
     allouerLct(&nouv);
 
-    //Lecure des information depuis le clavier
-    printf("Entrez l'ID du logement (voir la liste des logements) : ");
-    scanf("%d", &nouv->fiche.idLog);
+    ListeLocation *parcour; //sert a parcour la liste
+    int err; //booleen verifie si il y a erruer
 
-    printf("Entrez l'ID du locatair (voir la liste des locatiares) : ");
-    scanf("%d", &nouv->fiche.idLoc);
+
+    //Lecure des information depuis le clavier
+    do {
+        err = 0;
+        printf("Entrez l'ID du logement (voir la liste des logements) : ");
+        scanf("%d", &nouv->fiche.idLog);
+
+        //on verifie si il existe
+        if (nouv->fiche.idLog > dernierIdLog) {
+            err = 1;
+            printf("Logement n'exite pas, voir la liste des logements.\n");
+        }
+        //on verifie si ce logement est loué
+        parcour = tete;
+        while (parcour != NULL && !err) {
+            if (parcour->fiche.idLog == nouv->fiche.idLog) {
+                err = 1;
+                printf("Logement deja loue, entrez un autre\n");
+            }
+            parcour = suivLocation(parcour);
+        }
+    } while (err == 1);
+
+    do {
+        err = 0;
+        printf("Entrez l'ID du locataire (voir la liste des locatiares) : ");
+        scanf("%d", &nouv->fiche.idLoc);
+
+        //on verifie si ce locataire exite
+        if (nouv->fiche.idLoc > dernierIdLoc) {
+            err = 1;
+            printf("Locataire n'exite pas, voir la liste des locataires.\n");
+        }
+    } while (err == 1);
 
     printf("Entrez la date du debut sous la forme JJMMAAAA : ");
     scanf("%ld", &nouv->fiche.dateDeb);
@@ -595,15 +626,13 @@ void ajouterLct(ListeLocation *tete) {
     //chainage
     ListeLocation *dernier = tete;
     while (suivLocation(dernier) != NULL) {
-        dernier = suivLocation(dernier);
+        dernier = suivLocation(dernier); //on parcours jusqu'au dernier
     }
     affAdr_Lct(dernier, nouv);
     affAdr_Lct(nouv, NULL);
 
-    printf("\n Location ajoute.");
+    printf("\n Location ajoute.\n");
 }
-
-//todo: Module SuppLogement() et autres, a toi de reflichir nassim
 
 int compareDate(long int date1, long int date2) {
     //retourne 0 si: date1 == date2, 1 si: date1 > date2, -1 si: date1 < date2
@@ -678,6 +707,7 @@ void affichLogDate(ListeLogement *teteLog, ListeLocation *teteLct, long int date
         log = suivLogement(log);
     }
 }
+
 void DecIdLog(ListeLogement ** tete) /* Décrémente tout les id des fiches des maillons de la liste pointée par tete*/
 { ListeLogement * p=*tete;
     while (p != NULL){
@@ -685,6 +715,7 @@ void DecIdLog(ListeLogement ** tete) /* Décrémente tout les id des fiches des 
         p=suivLogement(p);
     }
 }
+
 void DecIdLoc(ListeLocataire ** tete) /* Décrémente tout les id des fiches des maillons de la liste pointée par tete*/
 { ListeLocataire * p=*tete;
     while (p != NULL){
@@ -692,21 +723,24 @@ void DecIdLoc(ListeLocataire ** tete) /* Décrémente tout les id des fiches des
         p=suivLocataire(p);
     }
 }
-void MajLocationlog(ListeLocation ** tete, int ID){
+
+void MajLocationlog(ListeLocation ** tete, int ID) {
     ListeLocation *p=*tete;
     while (p != NULL){
         if ((p->fiche).idLog > ID){(p->fiche).idLog--;}
         p=suivLocation(p);
     }
 }
-void MajLocationloc(ListeLocation ** tete, int ID){
+
+void MajLocationloc(ListeLocation ** tete, int ID) {
     ListeLocation *p=*tete;
     while (p != NULL){
         if ((p->fiche).idLoc > ID){(p->fiche).idLoc--;}
         p=suivLocation(p);
     }
 }
-int ExistLocationLog(ListeLocation * tete, int ID ){
+
+int ExistLocationLog(ListeLocation * tete, int ID ) {
     ListeLocation *p;
     int l=0;
     p=tete;
@@ -716,7 +750,8 @@ int ExistLocationLog(ListeLocation * tete, int ID ){
     }
     return l;
 }
-int ExistLocationLoc(ListeLocation * tete, int ID ){
+
+int ExistLocationLoc(ListeLocation * tete, int ID ) {
     ListeLocation *p;
     int l=0;
     p=tete;
@@ -731,14 +766,17 @@ void insertarchivelog(ListeLogement ** tete,ListeLogement * p){
     affAdr_Log(p,*tete);
     *tete=p;
 }
+
 void insertarchiveloc(ListeLocataire ** tete,ListeLocataire * p){
     affAdr_Loc(p,*tete);
     *tete=p;
 }
+
 void insertarchivelocation(ListeLocation ** tete,ListeLocation * p){
     affAdr_Lct(p,*tete);
     *tete=p;
 }
+
 void supp_log(ListeLogement **tete1, ListeLocation * tete2, ListeLogement ** tete3){
     ListeLogement *p=*tete1, *q;
     int ID;
@@ -775,6 +813,7 @@ void supp_log(ListeLogement **tete1, ListeLocation * tete2, ListeLogement ** tet
 
 
 }
+
 void supp_loc(ListeLocataire **tete1,ListeLocation * tete2,ListeLocataire ** tete3){
     ListeLocataire *p=*tete1, *q;
     int ID;
@@ -807,6 +846,7 @@ void supp_loc(ListeLocataire **tete1,ListeLocation * tete2,ListeLocataire ** tet
     }
     MajLocationloc(&tete2,ID);
 }
+
 void supp_location(ListeLocation **tete, ListeLocation **tete2){
     ListeLocation *p=*tete,*q;
     int idloc,idlog,trouv=0;
