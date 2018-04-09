@@ -216,6 +216,7 @@ void initLogement(FILE *f, ListeLogement **tete, int *cptId) { //Role: lire depu
     }
     fclose(f);
 }
+
 void initarchiveLogement(FILE *f, ListeLogement **tete, int *cptId) { //Role: lire depuis le fichier et cree la liste
     ListeLogement * tmp, *nouv; //2 Maillion intermediare
     int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
@@ -276,6 +277,7 @@ void initLocataire(FILE * f, ListeLocataire **tete, int *cptId) {
     }
     fclose(f);
 }
+
 void initarchiveLoc(FILE * f, ListeLocataire **tete, int *cptId) {
     ListeLocataire * tmp, *nouv; //2 Maillion intermediare
     int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
@@ -329,6 +331,7 @@ void initLocation(FILE* f, ListeLocation ** tete) {
     }
     fclose(f);
 }
+
 void initarchiveLocation(FILE* f, ListeLocation ** tete) {
     ListeLocation *tmp, *nouv; //2 Maillion intermediare
 
@@ -355,6 +358,7 @@ void initarchiveLocation(FILE* f, ListeLocation ** tete) {
     }
     fclose(f);
 }
+
 void sauvLogement(ListeLogement *tete, FILE *f) {
     ListeLogement *tmp = tete;
 
@@ -372,6 +376,7 @@ void sauvLogement(ListeLogement *tete, FILE *f) {
     }
     fclose(f);
 }
+
 void sauvarchiveLogement(ListeLogement *tete, FILE *f) {
     ListeLogement *tmp = tete;
 
@@ -389,6 +394,7 @@ void sauvarchiveLogement(ListeLogement *tete, FILE *f) {
     }
     fclose(f);
 }
+
 void sauvLocataire(ListeLocataire *tete, FILE *f) {
     ListeLocataire *tmp;
 
@@ -401,6 +407,7 @@ void sauvLocataire(ListeLocataire *tete, FILE *f) {
             fprintf(f, "\n");
     }
 }
+
 void sauvarchiveLocataire(ListeLocataire *tete, FILE *f) {
     ListeLocataire *tmp;
 
@@ -428,6 +435,7 @@ void sauvLocation(ListeLocation *tete, FILE *f) {
         }
     }
 }
+
 void sauvarchivelocation(ListeLocation *tete, FILE *f) {
     ListeLocation *tmp;
 
@@ -442,6 +450,7 @@ void sauvarchivelocation(ListeLocation *tete, FILE *f) {
         }
     }
 }
+
 void afficherLog(ListeLogement * tete) {
     ListeLogement *tmp = tete;
     char * type; //chaine qui contient le type du logement
