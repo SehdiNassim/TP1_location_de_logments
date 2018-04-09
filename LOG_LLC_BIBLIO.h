@@ -216,12 +216,71 @@ void initLogement(FILE *f, ListeLogement **tete, int *cptId) { //Role: lire depu
     }
     fclose(f);
 }
+void initarchiveLogement(FILE *f, ListeLogement **tete, int *cptId) { //Role: lire depuis le fichier et cree la liste
+    ListeLogement * tmp, *nouv; //2 Maillion intermediare
+    int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
+
+    f = fopen("../archivelogement.txt", "r"); //ouverture du fichier au mode lecture
+    if (f == NULL) perror("fopen");
+    else {
+        allouerLog(&tmp);
+        *tete = tmp;
+        while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
+            fscanf(f, "%d %d %[^_]%*s %d", &tmp->fiche.type,
+                   &tmp->fiche.air,
+                   tmp->fiche.nomQuartier,
+                   &tmp->fiche.distCommune);
+            //affectation de ID
+            cpt++;
+            tmp->fiche.id = cpt;
+            //calcul du loyer
+            tmp->fiche.loyer = LB[tmp->fiche.type] + ((tmp->fiche.air - SM[tmp->fiche.type]) * 800);
+            if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
+                affAdr_Log(tmp, NULL);
+            } else {
+                allouerLog(&nouv);
+                affAdr_Log(tmp, nouv);
+                tmp = suivLogement(tmp);
+            }
+        }
+        *cptId = cpt; //ceci represente implicitement la longueur de la liste
+        // mais sert aussi a l'ajout des nouveaux logements (pour eviter le parcours a
+        // chque ajout/suppression)
+    }
+    fclose(f);
+}
 
 void initLocataire(FILE * f, ListeLocataire **tete, int *cptId) {
     ListeLocataire * tmp, *nouv; //2 Maillion intermediare
     int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
 
     f = fopen("../locataires.txt", "r"); //ouverture du fichier au mode lecture
+    if (f == NULL) {
+        perror("fopen");
+    } else {
+        allouerLoc(&tmp);
+        *tete = tmp;
+        while (feof(f) == 0) { //lecture jusqu'a arriver a la fin du fichier
+            fscanf(f, "%[^_]%*s %[^_]%*s %s\n", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
+            cpt++;
+            tmp->fiche.id = cpt;
+            if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture (i.e: derniere ligne)
+                affAdr_Loc(tmp, NULL);
+            } else {
+                allouerLoc(&nouv);
+                affAdr_Loc(tmp, nouv);
+                tmp = suivLocataire(tmp);
+            }
+        }
+        *cptId = cpt; //meme chose pour initLogement
+    }
+    fclose(f);
+}
+void initarchiveLoc(FILE * f, ListeLocataire **tete, int *cptId) {
+    ListeLocataire * tmp, *nouv; //2 Maillion intermediare
+    int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
+
+    f = fopen("../archivelocataire.txt", "r"); //ouverture du fichier au mode lecture
     if (f == NULL) {
         perror("fopen");
     } else {
@@ -270,7 +329,32 @@ void initLocation(FILE* f, ListeLocation ** tete) {
     }
     fclose(f);
 }
+void initarchiveLocation(FILE* f, ListeLocation ** tete) {
+    ListeLocation *tmp, *nouv; //2 Maillion intermediare
 
+    f = fopen("../archivelocation.txt", "r"); //ouverture du fichier au mode lecture
+    if (f == NULL) {
+        perror("fopen");
+    } else {
+        allouerLct(&tmp);
+        *tete = tmp;
+        while (feof(f) == 0) {
+            //lecture jusqu'a arriver a la fin du fichier
+            fscanf(f, "%d %d %ld %ld", &tmp->fiche.idLog, &tmp->fiche.idLoc,
+                   &tmp->fiche.dateDeb,
+                   &tmp->fiche.dateFin);
+
+            if (feof(f) != 0) { //cas ou on arrive a la fin apres lecture
+                affAdr_Lct(tmp, NULL);
+            } else {
+                allouerLct(&nouv);
+                affAdr_Lct(tmp, nouv);
+                tmp = suivLocation(tmp);
+            }
+        }
+    }
+    fclose(f);
+}
 void sauvLogement(ListeLogement *tete, FILE *f) {
     ListeLogement *tmp = tete;
 
@@ -288,11 +372,39 @@ void sauvLogement(ListeLogement *tete, FILE *f) {
     }
     fclose(f);
 }
+void sauvarchiveLogement(ListeLogement *tete, FILE *f) {
+    ListeLogement *tmp = tete;
 
+    f = fopen("../archivelogement.txt", "w"); //ouverture en ecriture
+    if (f != NULL) {
+        while (tmp != NULL) {
+            fprintf(f, "%d %d %s_ %d",
+                    tmp->fiche.type, tmp->fiche.air, tmp->fiche.nomQuartier, tmp->fiche.distCommune);
+            tmp = suivLogement(tmp);
+            if (tmp != NULL)
+                fprintf(f, "\n");
+        }
+    } else {
+        perror("fopen");
+    }
+    fclose(f);
+}
 void sauvLocataire(ListeLocataire *tete, FILE *f) {
     ListeLocataire *tmp;
 
     f = fopen("../locataires.txt", "w");
+    tmp = tete;
+    while (tmp != NULL) {
+        fprintf(f, "%s_ %s_ %s", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
+        tmp = suivLocataire(tmp);
+        if (tmp != NULL)
+            fprintf(f, "\n");
+    }
+}
+void sauvarchiveLocataire(ListeLocataire *tete, FILE *f) {
+    ListeLocataire *tmp;
+
+    f = fopen("../archivelocataire.txt", "w");
     tmp = tete;
     while (tmp != NULL) {
         fprintf(f, "%s_ %s_ %s", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
@@ -316,7 +428,20 @@ void sauvLocation(ListeLocation *tete, FILE *f) {
         }
     }
 }
+void sauvarchivelocation(ListeLocation *tete, FILE *f) {
+    ListeLocation *tmp;
 
+    f = fopen("../archivelocation.txt", "w");
+    tmp = tete;
+    while (tmp != NULL) {
+        fprintf(f, "%d %d %ld %ld",
+                tmp->fiche.idLog, tmp->fiche.idLoc, tmp->fiche.dateDeb, tmp->fiche.dateFin);
+        tmp = suivLocation(tmp);
+        if (tmp != NULL) {
+            fprintf(f, "\n");
+        }
+    }
+}
 void afficherLog(ListeLogement * tete) {
     ListeLogement *tmp = tete;
     char * type; //chaine qui contient le type du logement
@@ -552,6 +677,155 @@ void affichLogDate(ListeLogement *teteLog, ListeLocation *teteLct, long int date
         }
         log = suivLogement(log);
     }
+}
+void DecIdLog(ListeLogement ** tete) /* Décrémente tout les id des fiches des maillons de la liste pointée par tete*/
+{ ListeLogement * p=*tete;
+    while (p != NULL){
+        (p->fiche).id--;
+        p=suivLogement(p);
+    }
+}
+void DecIdLoc(ListeLocataire ** tete) /* Décrémente tout les id des fiches des maillons de la liste pointée par tete*/
+{ ListeLocataire * p=*tete;
+    while (p != NULL){
+        (p->fiche).id--;
+        p=suivLocataire(p);
+    }
+}
+void MajLocationlog(ListeLocation ** tete, int ID){
+    ListeLocation *p=*tete;
+    while (p != NULL){
+        if ((p->fiche).idLog > ID){(p->fiche).idLog--;}
+        p=suivLocation(p);
+    }
+}
+void MajLocationloc(ListeLocation ** tete, int ID){
+    ListeLocation *p=*tete;
+    while (p != NULL){
+        if ((p->fiche).idLoc > ID){(p->fiche).idLoc--;}
+        p=suivLocation(p);
+    }
+}
+int ExistLocationLog(ListeLocation * tete, int ID ){
+    ListeLocation *p;
+    int l=0;
+    p=tete;
+    while ((p!=NULL) && l==0){
+     if ((p->fiche).idLog ==ID){l=1;}
+     p=suivLocation(p);
+    }
+    return l;
+}
+int ExistLocationLoc(ListeLocation * tete, int ID ){
+    ListeLocation *p;
+    int l=0;
+    p=tete;
+    while ((p!=NULL) && l==0){
+        if ((p->fiche).idLoc ==ID){l=1;}
+        p=suivLocation(p);
+    }
+    return l;
+}
+
+void insertarchivelog(ListeLogement ** tete,ListeLogement * p){
+    affAdr_Log(p,*tete);
+    *tete=p;
+}
+void insertarchiveloc(ListeLocataire ** tete,ListeLocataire * p){
+    affAdr_Loc(p,*tete);
+    *tete=p;
+}
+void insertarchivelocation(ListeLocation ** tete,ListeLocation * p){
+    affAdr_Lct(p,*tete);
+    *tete=p;
+}
+void supp_log(ListeLogement **tete1, ListeLocation * tete2, ListeLogement ** tete3){
+    ListeLogement *p=*tete1, *q;
+    int ID;
+    printf("Donnez l'id du logement que vous voulez supprimer:" );
+    scanf("%d",&ID);
+    if (ID==1){
+        if (ExistLocationLog(tete2,ID)==1){
+            printf("Suppression impossible ,logement loué ");
+        }
+        else{*tete1=suivLogement(*tete1);
+            printf("Le Logement selectionne a etait supprime");
+            DecIdLog(tete1);
+            insertarchivelog(tete3 ,p);
+        }
+    }
+    else{
+        while((p!=NULL) &&((p->fiche).id!=ID)){q=p ;
+        p=suivLogement(p);}
+        if (p==NULL){
+            printf("Impossible de trouver un logement avec cet ID");
+        }
+        else{
+            if (ExistLocationLog(tete2,ID)==1){printf("Suppression impossible ,logement loué ");}
+            else{printf("Le Logement selectionne a etait supprime");
+                affAdr_Log(q,suivLogement(p));
+                q=suivLogement(p);
+                DecIdLog(&q);
+                insertarchivelog(tete3 ,p);
+
+            }
+        }
+    }
+    MajLocationlog(&tete2,ID);
+
+
+}
+void supp_loc(ListeLocataire **tete1,ListeLocation * tete2,ListeLocataire ** tete3){
+    ListeLocataire *p=*tete1, *q;
+    int ID;
+    printf("Donnez l'id du locataire que vous voulez supprimer:" );
+    scanf("%d",&ID);
+    if (ID==1){
+        if (ExistLocationLoc(tete2,ID)==1){
+            printf("Suppression impossible ,locataire toujours present ");
+        }
+        else{*tete1=suivLocataire(*tete1);
+            DecIdLoc(tete1);
+            insertarchiveloc(tete3,p);
+        }
+    }
+    else{
+        while((p!=NULL) &&((p->fiche).id!=ID)){q=p ;
+            p=suivLocataire(p);}
+        if (p==NULL){
+            printf("Impossible de trouver un locataire avec cet ID");
+        }
+        else{
+            if (ExistLocationLoc(tete2,ID)==1){printf("Suppression impossible ,locataire toujours present ");}
+            else{printf("%-20s %10s a etait supprimé",(p->fiche).nom,(p->fiche).prenom);
+                affAdr_Loc(q,suivLocataire(p));
+                q=suivLocataire(p);
+                DecIdLoc(&q);
+                insertarchiveloc(tete3,p);
+            }
+        }
+    }
+    MajLocationloc(&tete2,ID);
+}
+void supp_location(ListeLocation **tete, ListeLocation **tete2){
+    ListeLocation *p=*tete,*q;
+    int idloc,idlog,trouv=0;
+    printf("Entrez l'id du locataire: ");
+    scanf("%d",&idloc);
+    printf("Entrez l'id du logement: ");
+    scanf("%d",&idlog);
+    while (p!=NULL && trouv==0){
+        if((idlog ==(p->fiche).idLog) && (idloc ==(p->fiche).idLoc)){
+            if (p==*tete){*tete=suivLocation(*tete); }
+            else { affAdr_Lct(q,suivLocation(p)); }
+            insertarchivelocation(tete2,p);
+            trouv=1;
+        }
+        else {q=p;
+        p=suivLocation(p);}
+    }
+    if (p==NULL){ printf("Il n'existe pas de location avec le locataire et le logement que vous avez ecrit ");}
+
 }
 
 #endif //TP01_LOG_LLC_BIBLIO_H

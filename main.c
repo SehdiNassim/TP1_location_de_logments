@@ -13,21 +13,29 @@ int noExit = 1; //condition de sortie du programme
 FILE * fLogement;
 FILE * fLocations;
 FILE * fLocataires;
+FILE * farchivelogement;
+FILE * farchivelocataire;
+FILE * farchivelocation;
 
-ListeLocataire * locataires;
-ListeLogement * logements;
-ListeLocation * locations;
+
+ListeLocataire * locataires,*archivelocataire;
+ListeLogement * logements,*archivelogements;
+ListeLocation * locations , *archivelocation;
 
 //les variables suivantes seront modifiees a chaque ajout, suppression, etc..
-int idLogements; //dernier Id de la liste logements
-int idLocataires; //dernier Id de la liste locataires
+int idLogements,idarchiveLogements; //dernier Id de la liste logements
+int idLocataires,idarchivelocataire; //dernier Id de la liste locataires
 
 int main() {
     int choix;
     //initialisation des listes a partir du fichier
     initLogement(fLogement, &logements, &idLogements);
+    initarchiveLogement(farchivelogement, &archivelogements, &idarchiveLogements);
+    initarchiveLoc(farchivelocataire,&archivelocataire,&idarchivelocataire);
     initLocataire(fLocataires, &locataires, &idLocataires);
     initLocation(fLocations, &locations);
+    initarchiveLocation(farchivelocation,&archivelocation);
+
 
 
     // le programme se repete tant que l'utilisateur decide
@@ -43,7 +51,8 @@ int main() {
                        "\n\t7.Lister les logements selon une date"
                        "\n\t8.Lister Logements libre a une date"
                        "\n\t9.Consulter L'historique par annee"
-                       "\n\t10.Quitter"
+                       "\n\t10.afficher les archives"
+                       "\n\t11.Sauvegarder et Quitter"
                        "\nEntrez votre choix :");
         scanf("%d", &choix);
         system("cls");
@@ -72,19 +81,49 @@ int main() {
                         ajouterLog(logements, &idLogements);
                         getch();
                         break;
-                    /*case 2:
-                     * Module suppLogement, a toi nassim */
+                    case 2:
+                        supp_log(&logements,locations,&archivelogements);
+                        getch();
+                     /* Module suppLogement, a toi nassim */
                     default:
                         break;
                 }
                 break;
             case 5: //reste a ajouter ici suppLocataire()
-                ajouterLoc(locataires, &idLocataires);
-                getch();
+                printf("1.Ajouter\n2.Supprimer\n0.Retour\n");
+                int choix3 = 0;
+                scanf("%d", &choix3);
+                //traitement des 2 cas
+                switch (choix3) {
+                    case 1:
+                        ajouterLoc(locataires, &idLocataires);
+                        getch();
+                        break;
+                    case 2:
+                        supp_loc(&locataires,locations,&archivelocataire);
+                        getch();
+
+                    default:
+                        break;
+                }
                 break;
             case 6:
-                ajouterLct(locations);
-                getch();
+                printf("1.Ajouter\n2.Supprimer\n0.Retour\n");
+                int choix4 = 0;
+                scanf("%d", &choix4);
+                //traitement des 2 cas
+                switch (choix4) {
+                    case 1:
+                        ajouterLct(locations);
+                        getch();
+                        break;
+                    case 2:
+                        supp_location(&locations,&archivelocation);
+                        getch();
+                        /* Module suppLogement, a toi nassim */
+                    default:
+                        break;
+                }
                 break;
             case 7:
                 printf("Entrez date sous forme JJMMAAAA: \n");
@@ -96,15 +135,41 @@ int main() {
             default:
                 noExit = 0;
                 break;
+            case 10:
+                printf("1.Archive des logement\n2.Archive des locataires\n3.Archive des location\n0.Retour");
+                int choix10;
+                scanf("%d",&choix10);
+                switch(choix10){
+                    case 1 :
+                        afficherLog(archivelogements);
+                        getch();
+                        break;
+                    case 2 :
+                        afficherLoc(archivelocataire);
+                        getch();
+                        break;
+                    case 3 :
+                        afficherLct(archivelocation);
+                        getch();
+                        break;
+                    default:
+                        break;
+                }
         }
     }
     //sauvegrade de toute modifications
     sauvLogement(logements, fLogement);
+    sauvarchiveLogement(archivelogements,farchivelogement);
     sauvLocataire(locataires, fLocataires);
+    sauvarchiveLocataire(archivelocataire,farchivelocataire);
     sauvLocation(locations, fLocations);
+    sauvarchivelocation(archivelocation,farchivelocation);
     //puis on libere la memoire
     liberLogement(logements);
+    liberLogement(archivelogements);
     liberLocation(locations);
+    liberLocation(archivelocation);
     liberLocataire(locataires);
+    liberLocataire(archivelocataire);
     return 0;
 }
