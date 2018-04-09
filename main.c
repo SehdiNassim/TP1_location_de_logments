@@ -129,16 +129,15 @@ int main() {
                 printf("Entrez date sous forme JJMMAAAA: \n");
                 long int date = 0;
                 scanf("%ld", &date);
+                system("cls");
                 affichLogDate(logements, locations, date);
                 getch();
-                break;
-            default:
-                noExit = 0;
                 break;
             case 10:
                 printf("1.Archive des logement\n2.Archive des locataires\n3.Archive des location\n0.Retour");
                 int choix10;
                 scanf("%d",&choix10);
+                system("cls");
                 switch(choix10){
                     case 1 :
                         afficherLog(archivelogements);
@@ -155,6 +154,9 @@ int main() {
                     default:
                         break;
                 }
+            default:
+                noExit = 0;
+                break;
         }
     }
     //sauvegrade de toute modifications
