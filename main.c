@@ -87,7 +87,7 @@ int main() {
                 getch();
                 break;
             case 7:
-                printf("Entrez date sous forme JJMMAAAA");
+                printf("Entrez date sous forme JJMMAAAA: \n");
                 long int date = 0;
                 scanf("%ld", &date);
                 affichLogDate(logements, locations, date);
