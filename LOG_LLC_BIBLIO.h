@@ -27,7 +27,6 @@ typedef struct Logement {
     int air;
     char nomQuartier[25]; //chaine a une taille cste
     int distCommune;
-    //faute de comprehension d'enonce, distLoyer na pas de sense
     float loyer;
 } FicheLogement;
 
@@ -45,7 +44,6 @@ typedef struct Location {
     int idLoc; //Id du locataire du locataire
     long int dateDeb;  //format date : JJMMAAAA
     long int dateFin;
-    //Loyer ne caracterise pas la location
 } FicheLocation;
 
 /* *********************Les modèles de LLC************************/
@@ -137,6 +135,14 @@ void affAdr_Loc(ListeLocataire *destination, ListeLocataire *source) {
 
 void affAdr_Lct(ListeLocation *destination, ListeLocation *source) {
     destination->adr = source;
+}
+
+void affVal_Lct(ListeLocation *destination, ListeLocation *source) {
+
+    destination->fiche.idLog = source->fiche.idLog;
+    destination->fiche.idLoc = source->fiche.idLoc;
+    destination->fiche.dateDeb = source->fiche.dateDeb;
+    destination->fiche.dateFin = source->fiche.dateFin;
 }
 
 ListeLogement * idLogement(ListeLogement * tete,int id) { //retourne l'adresse du maillion a la postion id
@@ -877,4 +883,66 @@ void supp_location(ListeLocation **tete, ListeLocation **tete2){
 
 }
 
+void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
+    ListeLocation *studio, *f2, *f3, *f4;
+    ListeLocation *q1, *q2, *q3, *q4;
+    ListeLocation *nouv;
+
+    ListeLogement *courant;
+    allouerLct(&studio);
+    allouerLct(&f2);
+    allouerLct(&f3);
+    allouerLct(&f4);
+
+    //pointeurs vers le dernier maillion ajouté dans la liste
+    q1 = studio;
+    q2 = f2;
+    q3 = f3;
+    q4 = f4;
+
+    //eclatement de la liste, on ne modifie pas la liste initial
+    ListeLocation *parcour = teteLct;
+    while (parcour != NULL) {
+        courant = idLogement(teteLog, parcour->fiche.idLog); //retourne l'adresse du logment sepcifié dans la location
+
+        if (courant->fiche.type == 0) {
+            allouerLct(&nouv);
+            affVal_Lct(nouv, parcour);
+
+            affAdr_Lct(q1, nouv);
+            affAdr_Lct(nouv, NULL);
+            q1 = nouv;
+        } else if (courant->fiche.type == 1) {
+            allouerLct(&nouv);
+            affVal_Lct(nouv, parcour);
+
+            affAdr_Lct(q2, nouv);
+            affAdr_Lct(nouv, NULL);
+            q2 = nouv;
+        } else if (courant->fiche.type == 2) {
+            allouerLct(&nouv);
+            affVal_Lct(nouv, parcour);
+
+            affAdr_Lct(q3, nouv);
+            affAdr_Lct(nouv, NULL);
+            q3 = nouv;
+        } else if (courant->fiche.type == 3) {
+            allouerLct(&nouv);
+            affVal_Lct(nouv, parcour);
+
+            affAdr_Lct(q4, nouv);
+            affAdr_Lct(nouv, NULL);
+            q4 = nouv;
+        }
+        parcour = suivLocation(parcour);
+    }
+
+    //tri de chaque liste de location selon le loyer, par principe de bulle
+    //tri de la liste des studios
+    q1 = studio;
+    ListeLocation *suiv = suivLocation(q1);
+    while (q1 != NULL) {
+
+    }
+}
 #endif //TP01_LOG_LLC_BIBLIO_H

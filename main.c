@@ -49,7 +49,7 @@ int main() {
                        "\n\t5.Ajouter/Supprimer un locataire"
                        "\n\t6.Ajouter/Supprimer une location"
                        "\n\t7.Lister les logements selon une date"
-                       "\n\t8.Lister Logements libre a une date"
+                       "\n\t8.Trier la liste des logements selon le loyer"
                        "\n\t9.Consulter L'historique par annee"
                        "\n\t10.afficher les archives"
                        "\n\t11.Sauvegarder et Quitter"
@@ -132,6 +132,8 @@ int main() {
                 affichLogDate(logements, locations, date);
                 getch();
                 break;
+            case 8:
+                break;
             case 10:
                 printf("1.Archive des logement\n2.Archive des locataires\n3.Archive des location\n0.Retour");
                 int choix10;
@@ -153,8 +155,12 @@ int main() {
                     default:
                         break;
                 }
-            default:
+                break;
+            case 11:
                 noExit = 0;
+                break;
+            default:
+                system("cls");
                 break;
         }
     }
