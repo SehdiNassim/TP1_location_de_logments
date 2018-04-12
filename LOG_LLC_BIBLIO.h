@@ -5,6 +5,7 @@
 //
 #include <stdio.h>
 #include <malloc.h>
+#include <tgmath.h>
 
 #ifndef TP01_LOG_LLC_BIBLIO_H
 #define TP01_LOG_LLC_BIBLIO_H
@@ -888,7 +889,7 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
     ListeLocation *q1, *q2, *q3, *q4;
     ListeLocation *nouv;
 
-    ListeLogement *courant;
+    ListeLogement *logCourant;
     allouerLct(&studio);
     allouerLct(&f2);
     allouerLct(&f3);
@@ -903,30 +904,30 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
     //eclatement de la liste, on ne modifie pas la liste initial
     ListeLocation *parcour = teteLct;
     while (parcour != NULL) {
-        courant = idLogement(teteLog, parcour->fiche.idLog); //retourne l'adresse du logment sepcifié dans la location
+        logCourant = idLogement(teteLog, parcour->fiche.idLog); //retourne l'adresse du logment sepcifié dans la location
 
-        if (courant->fiche.type == 0) {
+        if (logCourant->fiche.type == 0) {
             allouerLct(&nouv);
             affVal_Lct(nouv, parcour);
 
             affAdr_Lct(q1, nouv);
             affAdr_Lct(nouv, NULL);
             q1 = nouv;
-        } else if (courant->fiche.type == 1) {
+        } else if (logCourant->fiche.type == 1) {
             allouerLct(&nouv);
             affVal_Lct(nouv, parcour);
 
             affAdr_Lct(q2, nouv);
             affAdr_Lct(nouv, NULL);
             q2 = nouv;
-        } else if (courant->fiche.type == 2) {
+        } else if (logCourant->fiche.type == 2) {
             allouerLct(&nouv);
             affVal_Lct(nouv, parcour);
 
             affAdr_Lct(q3, nouv);
             affAdr_Lct(nouv, NULL);
             q3 = nouv;
-        } else if (courant->fiche.type == 3) {
+        } else if (logCourant->fiche.type == 3) {
             allouerLct(&nouv);
             affVal_Lct(nouv, parcour);
 
@@ -938,11 +939,141 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
     }
 
     //tri de chaque liste de location selon le loyer, par principe de bulle
-    //tri de la liste des studios
+    //---tri de la liste des studios
     q1 = studio;
     ListeLocation *suiv = suivLocation(q1);
-    while (q1 != NULL) {
+    ListeLocation *p; //sert a permuter les valeurs
+    allouerLct(&p);
 
+    ListeLogement *suivLogCourant;
+    int ordone = 0;
+
+    while (suiv != NULL && !ordone) {
+        ordone = 1;
+        logCourant = idLogement(teteLog, q1->fiche.idLog);
+        suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
+
+        if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
+            ordone = 0;
+            affVal_Lct(p, q1);
+            affVal_Lct(q1, suiv);
+            affVal_Lct(suiv, p);
+        }
+
+        q1 = suiv;
+        suiv = suivLocation(suiv);
     }
+
+    //tri de la liste des F2
+    q2 = f2;
+    suiv = suivLocation(q2);
+    ordone = 0;
+
+    while (suiv != NULL && !ordone) {
+        ordone = 1;
+        logCourant = idLogement(teteLog, q2->fiche.idLog);
+        suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
+
+        if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
+            ordone = 0;
+            affVal_Lct(p, q2);
+            affVal_Lct(q2, suiv);
+            affVal_Lct(suiv, p);
+        }
+
+        q2 = suiv;
+        suiv = suivLocation(suiv);
+    }
+
+    //tri de la liste des F3
+    q3 = f3;
+    suiv = suivLocation(q3);
+    ordone = 0;
+
+    while (suiv != NULL && !ordone) {
+        ordone = 1;
+        logCourant = idLogement(teteLog, q3->fiche.idLog);
+        suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
+
+        if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
+            ordone = 0;
+            affVal_Lct(p, q3);
+            affVal_Lct(q3, suiv);
+            affVal_Lct(suiv, p);
+        }
+
+        q3 = suiv;
+        suiv = suivLocation(suiv);
+    }
+
+    //tri de la liste des F4
+    q4 = f4;
+    suiv = suivLocation(q4);
+    ordone = 0;
+
+    while (suiv != NULL && !ordone) {
+        ordone = 1;
+        logCourant = idLogement(teteLog, q4->fiche.idLog);
+        suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
+
+        if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
+            ordone = 0;
+            affVal_Lct(p, q4);
+            affVal_Lct(q4, suiv);
+            affVal_Lct(suiv, p);
+        }
+
+        q4 = suiv;
+        suiv = suivLocation(suiv);
+    }
+
+    //Liaison de toute les listes 2 par 2
+    //--studio avec F1
+    int debut = 1;
+    while (studio != NULL && f2 != NULL) {
+        //on parcour avec les pointeurs de tete sans risquer de les perdre car on aura plus besoin
+
+        //acces au logement spécifié par la location
+        logCourant = idLogement(teteLog, studio->fiche.idLog);
+        suivLogCourant = idLogement(teteLog, f2->fiche.idLog);
+
+        //On compare les loyers des location 2 à 2 et on change le chainage selon l'ordre
+        if (logCourant->fiche.loyer <= suivLogCourant->fiche.loyer) {
+
+            if (debut) { //si on est au debut de la liste
+                teteLct = studio; //on garde la tete
+                p = studio; //p va servir à un pointeur vers le dernier maillion chainé
+                suiv = suivLocation(studio);
+                affAdr_Lct(studio, f2);
+                studio = suiv;
+                debut = 0;
+            } else {
+                affAdr_Lct(p, studio); //chainage du maillion precdent avec le courant
+                suiv = suivLocation(studio); //pour ne pas perdre le suivant
+                affAdr_Lct(studio, f2);
+                p = studio; //le dernier maillion chainé est consideré comme le precedent
+                studio = suiv;
+            }
+        } else {
+            if (debut) {
+                teteLct = f2;
+                p = f2;
+                suiv = suivLocation(f2);
+                affAdr_Lct(f2, studio);
+                f2 = suiv;
+                debut = 0;
+            } else {
+                affAdr_Lct(p, f2);
+                suiv = suivLocation(f2);
+                affAdr_Lct(f2, studio);
+                p = f2;
+                studio = suiv;
+            }
+        }
+    } // teteLct est obetnue en fusionnant les deux listes "studio" et "f1"
+
+    //--teteLct avec F3, todo
+
+
 }
 #endif //TP01_LOG_LLC_BIBLIO_H
