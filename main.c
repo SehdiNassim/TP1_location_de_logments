@@ -133,6 +133,8 @@ int main() {
                 getch();
                 break;
             case 8:
+                triLogementLoyer(locations, logements);
+                getch();
                 break;
             case 10:
                 printf("1.Archive des logement\n2.Archive des locataires\n3.Archive des location\n0.Retour");
