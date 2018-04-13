@@ -18,7 +18,7 @@ FILE * farchivelocataire;
 FILE * farchivelocation;
 
 
-ListeLocataire * locataires,*archivelocataire;
+ListeLocataire * locataires,*archivelocataire,*Lstudio,*LF2,*LF3,*LF4;
 ListeLogement * logements,*archivelogements;
 ListeLocation * locations , *archivelocation;
 
@@ -52,7 +52,8 @@ int main() {
                        "\n\t8.Trier la liste des logements selon le loyer"
                        "\n\t9.Consulter L'historique par annee"
                        "\n\t10.afficher les archives"
-                       "\n\t11.Sauvegarder et Quitter"
+                       "\n\t11.afficher les locataires occupant un logement de meme type et dont l'air est superieur a la SM"
+                       "\n\t12.Sauvegarder et Quitter"
                        "\nEntrez votre choix :");
         scanf("%d", &choix);
         system("cls");
@@ -159,6 +160,29 @@ int main() {
                 }
                 break;
             case 11:
+                printf("Choisissez le type de logement :\n 1.Studio \n 2.F2 \n 3.F3 \n 4.F4");
+                Typelog choix11;
+                scanf("%d",&choix11);
+                switch(choix11){
+                    case 1:
+                        ListLocTyplog(locations,logements,locataires,0,&Lstudio);
+                        getch();
+                        break;
+                    case 2:
+                        ListLocTyplog(locations,logements,locataires,1,&LF2);
+                        getch();
+                        break;
+                    case 3:
+                        ListLocTyplog(locations,logements,locataires,2,&LF3);
+                        getch();
+                        break;
+                    case 4:
+                        ListLocTyplog(locations,logements,locataires,3,&LF4);
+                        getch();
+                        break;
+                }
+                break;
+            case 12:
                 noExit = 0;
                 break;
             default:
