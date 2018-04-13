@@ -829,5 +829,21 @@ void supp_location(ListeLocation **tete, ListeLocation **tete2){
     if (p==NULL){ printf("Il n'existe pas de location avec le locataire et le logement que vous avez ecrit ");}
 
 }
+void ListLocTyplog(ListeLocation * tete1,ListeLogement * tete2,ListeLocataire * tete3,Typelog ID , ListeLocataire ** tete4){
+    *tete4=NULL;
+    ListeLocataire * q;
+    ListeLocation * p=tete1;
+    while (p!=NULL){
+        if ((idLogement(tete2,(p->fiche).idLog)->fiche).type==ID && (idLogement(tete2,(p->fiche).idLog)->fiche).air > SM[ID])
+        {if (*tete4==NULL){*tete4=idLocataire(tete3,(p->fiche).idLoc);
+            q=*tete4;}
+         else {affAdr_Loc(q, idLocataire(tete3,(p->fiche).idLoc));
+               q=suivLocataire(q);
+            }}
+        p=suivLocation(p);
+    }
+    afficherLoc(*tete4);
+
+}
 
 #endif //TP01_LOG_LLC_BIBLIO_H
