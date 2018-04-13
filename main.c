@@ -4,7 +4,7 @@
  * Edite par:  Benmoussat Mouad Sehdi Nassim
  * **********************************************************************/
 
-#include <stdio.h> //Bibliotheque necessaire pour les entrees sories
+#include <stdio.h> //Bibliotheques necessaire pour les entrees sories
 #include <conio.h>
 #include "LOG_LLC_BIBLIO.h"
 
@@ -49,7 +49,7 @@ int main() {
                        "\n\t5.Ajouter/Supprimer un locataire"
                        "\n\t6.Ajouter/Supprimer une location"
                        "\n\t7.Lister les logements selon une date"
-                       "\n\t8.Lister Logements libre a une date"
+                       "\n\t8.Trier la liste des logements selon le loyer"
                        "\n\t9.Consulter L'historique par annee"
                        "\n\t10.afficher les archives"
                        "\n\t11.Sauvegarder et Quitter"
@@ -114,31 +114,33 @@ int main() {
                 //traitement des 2 cas
                 switch (choix4) {
                     case 1:
-                        ajouterLct(locations);
+                        ajouterLct(locations, idLogements, idLocataires);
                         getch();
                         break;
                     case 2:
                         supp_location(&locations,&archivelocation);
                         getch();
-                        /* Module suppLogement, a toi nassim */
                     default:
                         break;
                 }
                 break;
             case 7:
-                printf("Entrez date sous forme JJMMAAAA");
+                printf("Entrez date sous forme JJMMAAAA: \n");
                 long int date = 0;
                 scanf("%ld", &date);
+                system("cls");
                 affichLogDate(logements, locations, date);
                 getch();
                 break;
-            default:
-                noExit = 0;
+            case 8:
+                triLogementLoyer(locations, logements);
+                getch();
                 break;
             case 10:
                 printf("1.Archive des logement\n2.Archive des locataires\n3.Archive des location\n0.Retour");
                 int choix10;
                 scanf("%d",&choix10);
+                system("cls");
                 switch(choix10){
                     case 1 :
                         afficherLog(archivelogements);
@@ -155,6 +157,13 @@ int main() {
                     default:
                         break;
                 }
+                break;
+            case 11:
+                noExit = 0;
+                break;
+            default:
+                system("cls");
+                break;
         }
     }
     //sauvegrade de toute modifications
