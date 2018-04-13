@@ -893,6 +893,28 @@ void supp_location(ListeLocation **tete, ListeLocation **tete2){
     if (p==NULL){ printf("Il n'existe pas de location avec le locataire et le logement que vous avez ecrit ");}
 
 }
+void ListLocTyplog(ListeLocation * tete1,ListeLogement * tete2,ListeLocataire * tete3,int ID , ListeLocataire ** tete4){
+    *tete4=NULL;
+    ListeLocataire * q,*w;
+    ListeLocation * p=tete1;
+    while (p!=NULL){
+        if ((idLogement(tete2,(p->fiche).idLog)->fiche).type==ID && (idLogement(tete2,(p->fiche).idLog)->fiche).air > SM[ID])
+        {if (*tete4==NULL){allouerLoc(tete4);
+                (*tete4)->fiche=(idLocataire(tete3,(p->fiche).idLoc))->fiche;
+                affAdr_Loc(*tete4,NULL);
+            q=*tete4;}
+         else {allouerLoc(&w);
+                w->fiche=(idLocataire(tete3,(p->fiche).idLoc))->fiche;
+                affAdr_Loc(w,NULL);
+                affAdr_Loc(q,w);
+               q=suivLocataire(q);
+            }
+        affAdr_Loc(q,NULL);}
+        p=suivLocation(p);
+    }
+    afficherLoc(*tete4);
+
+}
 
 void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
     ListeLocation *studio, *f2, *f3, *f4;
