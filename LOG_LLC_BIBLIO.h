@@ -1236,11 +1236,24 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
 
     //affichage de la liste trié
     parcour = listeTrie;
-    printf("ID LOG ID LOC      Date Debut    Date Fin     Loyer\n");
+    int jourDeb, moisDeb, anDeb;
+    int jourFin, anFin, moisFin;
+
+    printf("ID LOG ID LOC      Date Debut%7sDate Fin%11sLoyer\n","","");
     while (parcour != NULL) {
+        anDeb = parcour->fiche.dateDeb % 10000;
+        moisDeb = parcour->fiche.dateDeb/ 10000 % 100;
+        jourDeb = parcour->fiche.dateDeb/ 10000 / 100;
+
+        anFin = parcour->fiche.dateFin % 10000;
+        moisFin = parcour->fiche.dateFin / 10000 % 100;
+        jourFin = parcour->fiche.dateFin / 10000 / 100;
+        
         logCourant = idLogement(teteLog, parcour->fiche.idLog);
-        printf("%5d %5d  %20ld  %20ld  %.0f DZD\n", parcour->fiche.idLog, parcour->fiche.idLoc, parcour->fiche.dateDeb,
-               parcour->fiche.dateFin, logCourant->fiche.loyer);
+
+        printf("%5d %5d  %8d/%2d/%-6d  %5d/%2d/%-6d  %10.0f DZD\n", parcour->fiche.idLog, parcour->fiche.idLoc, jourDeb,
+               moisDeb, anDeb,
+               jourFin, moisFin, anFin, logCourant->fiche.loyer);
 
         parcour = suivLocation(parcour);
     }
