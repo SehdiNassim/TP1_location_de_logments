@@ -147,13 +147,13 @@ void affVal_Lct(ListeLocation *destination, ListeLocation *source) {
     destination->fiche.dateFin = source->fiche.dateFin;
 }
 
-void affVal_Log(ListeLogement *destination, ListeLogement *source) {
-
+void affVal_Log(ListeLogement *destination, ListeLogement *source) { //destination <- source
     destination->fiche.id = source->fiche.id;
+    destination->fiche.type = source->fiche.type;
     destination->fiche.loyer = source->fiche.loyer;
     destination->fiche.air = source->fiche.air;
+    destination->fiche.distCommune = source->fiche.distCommune;
     strcpy(destination->fiche.nomQuartier, source->fiche.nomQuartier);
-    destination->fiche.type = source->fiche.type;
 }
 
 ListeLogement * idLogement(ListeLogement * tete,int id) { //retourne l'adresse du maillion a la postion id
@@ -893,6 +893,7 @@ void supp_location(ListeLocation **tete, ListeLocation **tete2){
     if (p==NULL){ printf("Il n'existe pas de location avec le locataire et le logement que vous avez ecrit ");}
 
 }
+
 void ListLocTyplog(ListeLocation * tete1,ListeLogement * tete2,ListeLocataire * tete3,int ID , ListeLocataire ** tete4){
     *tete4=NULL;
     ListeLocataire * q,*w;
@@ -1294,22 +1295,67 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
 ListeLogement * prochCommune(ListeLogement *tete) {
     //retourne une liste trié par les logement les plus proche de la commune et ayany un loyer minimale
     ListeLogement *courant, *suivant;
-    
+
     //On crée une toute nouvelle liste pour ne pas modifier la liste courante
-    ListeLogement *nouv, listeTrie;
+    ListeLogement *nouv, *listeTrie;
 
     int debut = 1;
+
+    //On copie la liste courante dans une nouvelle Liste
     courant = tete;
+    while (courant != NULL) {
+        allouerLog(&nouv);
+        affVal_Log(nouv, courant);
+        affAdr_Log(nouv, NULL);
+        if (debut) {
+            listeTrie = nouv;
+            debut = 0;
+        } else {
+            affAdr_Log(suivant, nouv);
+        }
+        suivant = nouv;
+        courant = suivLogement(courant);
+    }
+    if (courant == NULL && debut == 1) {
+        listeTrie = NULL;
+    }
+    //listeTrie est une copie de tete
+
+
+    //On tri la liste selon deux critére: la distanceComm la plus petite, si egaux alors le loyer le plus petit
+    courant = listeTrie;
+    int permute = 1;
+
     if (courant != NULL) {
         suivant = suivLogement(courant);
-        while (suivant != NULL) {
+        while (suivant != NULL || permute) {
             if (courant->fiche.distCommune > suivant->fiche.distCommune) {
-                if (debut) {
+                //simple permutation
+                allouerLog(&nouv);
+                affVal_Log(nouv, courant);
+                affVal_Log(courant, suivant);
+                affVal_Log(suivant, nouv);
+                permute = 1;
+            } else if (courant->fiche.distCommune == suivant->fiche.distCommune) {
+                //si ils ont la même distance alors on verifie le loyer
+                if (courant->fiche.loyer > suivant->fiche.loyer) {
                     allouerLog(&nouv);
-                    affAdr_Log(nouv, NULL);
+                    affVal_Log(nouv, courant);
+                    affVal_Log(courant, suivant);
+                    affVal_Log(suivant, nouv);
+                    permute = 1;
                 }
             }
-        } 
-    } 
+            courant = suivant;
+            suivant = suivLogement(suivant);
+
+            if (suivant == NULL && permute) {
+                courant = listeTrie;
+                suivant = suivLogement(courant);
+                permute = 0;
+            }
+        }
+    }
+    return listeTrie;
 }
 #endif //TP01_LOG_LLC_BIBLIO_H
