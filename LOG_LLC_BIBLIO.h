@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <tgmath.h>
+#include <string.h>
 
 #ifndef TP01_LOG_LLC_BIBLIO_H
 #define TP01_LOG_LLC_BIBLIO_H
@@ -144,6 +145,15 @@ void affVal_Lct(ListeLocation *destination, ListeLocation *source) {
     destination->fiche.idLoc = source->fiche.idLoc;
     destination->fiche.dateDeb = source->fiche.dateDeb;
     destination->fiche.dateFin = source->fiche.dateFin;
+}
+
+void affVal_Log(ListeLogement *destination, ListeLogement *source) {
+
+    destination->fiche.id = source->fiche.id;
+    destination->fiche.loyer = source->fiche.loyer;
+    destination->fiche.air = source->fiche.air;
+    strcpy(destination->fiche.nomQuartier, source->fiche.nomQuartier);
+    destination->fiche.type = source->fiche.type;
 }
 
 ListeLogement * idLogement(ListeLogement * tete,int id) { //retourne l'adresse du maillion a la postion id
@@ -1257,5 +1267,27 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
 
         parcour = suivLocation(parcour);
     }
+}
+
+ListeLogement * prochCommune(ListeLogement *tete) {
+    //retourne une liste trié par les logement les plus proche de la commune et ayany un loyer minimale
+    ListeLogement *courant, *suivant;
+    
+    //On crée une toute nouvelle liste pour ne pas modifier la liste courante
+    ListeLogement *nouv, listeTrie;
+
+    int debut = 1;
+    courant = tete;
+    if (courant != NULL) {
+        suivant = suivLogement(courant);
+        while (suivant != NULL) {
+            if (courant->fiche.distCommune > suivant->fiche.distCommune) {
+                if (debut) {
+                    allouerLog(&nouv);
+                    affAdr_Log(nouv, NULL);
+                }
+            }
+        } 
+    } 
 }
 #endif //TP01_LOG_LLC_BIBLIO_H
