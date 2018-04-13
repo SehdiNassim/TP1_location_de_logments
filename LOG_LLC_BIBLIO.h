@@ -950,6 +950,7 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
 
     ListeLocation *suiv;
     q1 = studio;
+
     if (q1 != NULL){
         suiv = suivLocation(q1);
     } else
@@ -958,20 +959,27 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
     ListeLogement *suivLogCourant;
     int ordone = 0;
 
-    while (suiv != NULL && !ordone) {
-        ordone = 1;
-        logCourant = idLogement(teteLog, q1->fiche.idLog);
-        suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
+    if (suiv != NULL) {
+        while (!ordone) {
+            ordone = 1;
+            logCourant = idLogement(teteLog, q1->fiche.idLog);
+            suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
 
-        if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
-            ordone = 0;
-            affVal_Lct(p, q1);
-            affVal_Lct(q1, suiv);
-            affVal_Lct(suiv, p);
+            if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
+                ordone = 0;
+                affVal_Lct(p, q1);
+                affVal_Lct(q1, suiv);
+                affVal_Lct(suiv, p);
+            }
+
+            q1 = suiv;
+            suiv = suivLocation(suiv);
+            if (suiv == NULL && !ordone) {
+                //si on arrive a la fin et la liste et non trié on revien au debut
+                q1 = studio;
+                suiv = suivLocation(q1);
+            }
         }
-
-        q1 = suiv;
-        suiv = suivLocation(suiv);
     }
 
     //tri de la liste des F2
@@ -983,20 +991,27 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
     }
     ordone = 0;
 
-    while (suiv != NULL && !ordone) {
-        ordone = 1;
-        logCourant = idLogement(teteLog, q2->fiche.idLog);
-        suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
+    if (suiv != NULL) {
+        while (!ordone) {
+            ordone = 1;
+            logCourant = idLogement(teteLog, q2->fiche.idLog);
+            suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
 
-        if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
-            ordone = 0;
-            affVal_Lct(p, q2);
-            affVal_Lct(q2, suiv);
-            affVal_Lct(suiv, p);
+            if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
+                ordone = 0;
+                affVal_Lct(p, q2);
+                affVal_Lct(q2, suiv);
+                affVal_Lct(suiv, p);
+            }
+
+            q2 = suiv;
+            suiv = suivLocation(suiv);
+            if (suiv == NULL && !ordone) {
+                //si on arrive a la fin et la liste et no trie on revien au debut
+                q2 = f2;
+                suiv = suivLocation(q2);
+            }
         }
-
-        q2 = suiv;
-        suiv = suivLocation(suiv);
     }
 
     //tri de la liste des F3
@@ -1008,20 +1023,26 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
     }
     ordone = 0;
 
-    while (suiv != NULL && !ordone) {
-        ordone = 1;
-        logCourant = idLogement(teteLog, q3->fiche.idLog);
-        suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
+    if (suiv != NULL) {
+        while (suiv != NULL && !ordone) {
+            ordone = 1;
+            logCourant = idLogement(teteLog, q3->fiche.idLog);
+            suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
 
-        if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
-            ordone = 0;
-            affVal_Lct(p, q3);
-            affVal_Lct(q3, suiv);
-            affVal_Lct(suiv, p);
+            if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
+                ordone = 0;
+                affVal_Lct(p, q3);
+                affVal_Lct(q3, suiv);
+                affVal_Lct(suiv, p);
+            }
+
+            q3 = suiv;
+            suiv = suivLocation(suiv);
+            if (suiv == NULL && !ordone) {
+                q3 = f3;
+                suiv = suivLocation(q3);
+            }
         }
-
-        q3 = suiv;
-        suiv = suivLocation(suiv);
     }
 
     //tri de la liste des F4
@@ -1033,20 +1054,26 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
     }
     ordone = 0;
 
-    while (suiv != NULL && !ordone) {
-        ordone = 1;
-        logCourant = idLogement(teteLog, q4->fiche.idLog);
-        suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
+    if (suiv != NULL) {
+        while (!ordone) {
+            ordone = 1;
+            logCourant = idLogement(teteLog, q4->fiche.idLog);
+            suivLogCourant = idLogement(teteLog, suiv->fiche.idLog);
 
-        if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
-            ordone = 0;
-            affVal_Lct(p, q4);
-            affVal_Lct(q4, suiv);
-            affVal_Lct(suiv, p);
+            if (logCourant->fiche.loyer > suivLogCourant->fiche.loyer) {
+                ordone = 0;
+                affVal_Lct(p, q4);
+                affVal_Lct(q4, suiv);
+                affVal_Lct(suiv, p);
+            }
+
+            q4 = suiv;
+            suiv = suivLocation(suiv);
+            if (suiv == NULL && !ordone) {
+                q4 = f4;
+                suiv = suivLocation(q4);
+            }
         }
-
-        q4 = suiv;
-        suiv = suivLocation(suiv);
     }
 
     //Liaison de toute les listes 2 par 2
@@ -1093,12 +1120,14 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
             }
         }
     } // tete1 est obetnue en fusionnant les deux listes "studio" et "f2"
-    if (studio == NULL && f2 == NULL) {
-        tete1 = NULL;
-    } else if (studio == NULL) {
-        tete1 = f2;
-    } else if (f2 == NULL) {
-        tete1 = studio;
+    if (debut == 1) { //si la boucle ne s'est pas executé
+        if (studio == NULL && f2 == NULL) {
+            tete1 = NULL;
+        } else if (studio == NULL) {
+            tete1 = f2;
+        } else if (f2 == NULL) {
+            tete1 = studio;
+        }
     }
 
     //--tete1 avec F3
@@ -1144,13 +1173,16 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
             }
         }
     } //tete2 est obtenue en fusionannt tete1 avec f3
-    if (tete1 == NULL && f3 == NULL) {
-        tete2 = NULL;
-    } else if (tete1 == NULL) {
-        tete2 = f3;
-    } else if (f3 == NULL) {
-        tete2 = tete1;
+    if (debut) {
+        if (tete1 == NULL && f3 == NULL) {
+            tete2 = NULL;
+        } else if (tete1 == NULL) {
+            tete2 = f3;
+        } else if (f3 == NULL) {
+            tete2 = tete1;
+        }
     }
+
     debut = 1;
     while (tete2 != NULL && f4 != NULL) {
 
@@ -1192,12 +1224,14 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
             }
         }
     } //listeTrie est obtenue en fusionnant tete2 avec f4
-    if (tete2 == NULL && f4 == NULL)
-        listeTrie = NULL;
-    else if (tete2 == NULL) {
-        listeTrie = f4;
-    } else if (f4 == NULL) {
-        listeTrie = tete2;
+    if (debut) {
+        if (tete2 == NULL && f4 == NULL)
+            listeTrie = NULL;
+        else if (tete2 == NULL) {
+            listeTrie = f4;
+        } else if (f4 == NULL) {
+            listeTrie = tete2;
+        }
     }
 
     //affichage de la liste trié
@@ -1205,7 +1239,7 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
     printf("ID LOG ID LOC      Date Debut    Date Fin     Loyer\n");
     while (parcour != NULL) {
         logCourant = idLogement(teteLog, parcour->fiche.idLog);
-        printf("%3d %3d  %-8ld  %-8ld  %.0f\n", parcour->fiche.idLog, parcour->fiche.idLoc, parcour->fiche.dateDeb,
+        printf("%5d %5d  %20ld  %20ld  %.0f DZD\n", parcour->fiche.idLog, parcour->fiche.idLoc, parcour->fiche.dateDeb,
                parcour->fiche.dateFin, logCourant->fiche.loyer);
 
         parcour = suivLocation(parcour);
