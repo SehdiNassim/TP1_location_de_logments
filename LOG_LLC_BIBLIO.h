@@ -1516,7 +1516,9 @@ void Histo1(ListeLocation * tete1, ListeLocation * tete2, ListeLogement * tete3,
 void Histo2(ListeLocation * tete1, ListeLocation * tete2,ListeLogement * tete3, ListeLogement * tete4 ){
     ListeLocation *p = tete1, *q = tete2;
     int cpt0, cpt1, cpt2, cpt3, ANNEE;
+
     cpt0 = cpt1 = cpt2 = cpt3 = 0;
+
     printf("Entrez l'annee :");
     scanf("%d",&ANNEE);
     while(p!=NULL){
@@ -1574,7 +1576,7 @@ void Histo2(ListeLocation * tete1, ListeLocation * tete2,ListeLogement * tete3, 
                 }
             }
         }
-        q=suivLocation(q);
+        q = suivLocation(q);
     }
     printf("Pour l'annee %d : \n\t * %d fois studios loues"
                    "\n\t * %d fois F2 loues\n\t * %d fois F3 loues"

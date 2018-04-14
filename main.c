@@ -1,7 +1,21 @@
 /* ***********************************************************************
  *                      PROGRAMME PRINCIPALE
- *                  TP1 : Location de Logements
- * Edite par:  Benmoussat Mouad Sehdi Nassim
+ *                  TP1 : Gestion des Logements
+ * Edite par:  Benmoussat Mouad -- Sehdi Nassim -- G09
+ * -----------------------------------------------------------------------
+ * ----Le programme est divisé selon plusieurs sous partie
+ * où chaque sous partie est definie dans LOG_LLC_BIBLIO.h
+ * pour faciliter la lecture du programme en entier.
+ * ----------------------------------------------------------------------
+ * Merci de bien corriger et de prendre votre temps a comprendre les algo
+ * rithme, si il y a un probleme contactez-nous :
+ * hm_benmoussat@esi.dz
+ * hm_sehdi@esi.dz
+ * ----------------------------------------------------------------------
+ * NOTE: Les fichiers de lectures doivent se trouver dans le repertoire
+ * parrent du executable, sinon modifier les procedure:
+ * d'initialisation (initLog, initLoc, ...)
+ * de sauvegarde (sauvLog, sauvLoc, ...)
  * **********************************************************************/
 
 #include <stdio.h> //Bibliotheques necessaire pour les entrees sories
