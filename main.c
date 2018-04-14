@@ -137,7 +137,7 @@ int main() {
                 triLogementLoyer(locations, logements);
                 getch();
                 break;
-            case 9:
+            case 10:
                 printf("1.Nombre de location par quartier\n"
                        "2.Nombre de location par type de logement\n");
                 int choix9;
