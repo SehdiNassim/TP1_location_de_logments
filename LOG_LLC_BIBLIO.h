@@ -1411,7 +1411,7 @@ ListeLogement * prochCommune(ListeLogement *tete) {
 }
 
 
-void Histo1(ListeLocation * tete1,ListeLocation * tete2,ListeLogement * tete3,ListeLogement * tete4,ListeHistorique * tete5 ) {
+void Histo1(ListeLocation * tete1, ListeLocation * tete2, ListeLogement * tete3,ListeLogement * tete4,ListeHistorique * tete5 ) {
     ListeHistorique *p, *d;
     ListeLocation *q = tete1, *w = tete2;
     printf("Entrez l'annee :");
@@ -1428,10 +1428,13 @@ void Histo1(ListeLocation * tete1,ListeLocation * tete2,ListeLogement * tete3,Li
                 affAdrQuartier(tete5, NULL);
             } else {
                 while (suivQuartier(p) != NULL &&
-                       strcmp(idLogement(tete3, q->fiche.idLog)->fiche.nomQuartier, p->fiche.nomQuartier) != 0) {
+                       strncmp(idLogement(tete3, q->fiche.idLog)->fiche.nomQuartier, p->fiche.nomQuartier,
+                               strlen(p->fiche.nomQuartier)) != 0) {
+
                     p = suivQuartier(p);
                 }
-                if (suivQuartier(p) != NULL) { p->fiche.Nombre++; }
+                if (strncmp(idLogement(tete3, q->fiche.idLog)->fiche.nomQuartier, p->fiche.nomQuartier,
+                            strlen(p->fiche.nomQuartier)) == 0) { p->fiche.Nombre++; }
                 else {
                     allouerQartier(&d);
                     strcpy(((d)->fiche.nomQuartier), (idLogement(tete3, q->fiche.idLog)->fiche.nomQuartier));
@@ -1452,13 +1455,14 @@ void Histo1(ListeLocation * tete1,ListeLocation * tete2,ListeLogement * tete3,Li
                     strcpy(((tete5)->fiche.nomQuartier), (idLogement(tete3, w->fiche.idLog)->fiche.nomQuartier));
                     (tete5)->fiche.Nombre = 1;
                     affAdrQuartier(tete5, NULL);
-                }
-                else {
+                } else {
                     while (suivQuartier(p) != NULL &&
-                           strcmp(idLogement(tete3, w->fiche.idLog)->fiche.nomQuartier, p->fiche.nomQuartier) != 0) {
+                           strncmp(idLogement(tete3, w->fiche.idLog)->fiche.nomQuartier, p->fiche.nomQuartier, strlen(p->fiche.nomQuartier)) != 0) {
                         p = suivQuartier(p);
                     }
-                    if (suivQuartier(p) != NULL) { p->fiche.Nombre++; }
+                    if (strncmp(idLogement(tete3, w->fiche.idLog)->fiche.nomQuartier, p->fiche.nomQuartier,
+                                strlen(p->fiche.nomQuartier)) == 0) {
+                        p->fiche.Nombre++; }
                     else {
                         allouerQartier(&d);
                         strcpy(((d)->fiche.nomQuartier), (idLogement(tete3, w->fiche.idLog)->fiche.nomQuartier));
@@ -1468,31 +1472,34 @@ void Histo1(ListeLocation * tete1,ListeLocation * tete2,ListeLogement * tete3,Li
                     }
                 }
 
-            }
-        } else {
-            if (tete5 == NULL) {
-                allouerQartier(&tete5);
-                strcpy(((tete5)->fiche.nomQuartier), (IdArchiveLogement(tete4, w->fiche.idLog)->fiche.nomQuartier));
-                (tete5)->fiche.Nombre = 1;
-                p = tete5;
-                affAdrQuartier(tete5, NULL);
-            }
-            else {
-                while (suivQuartier(p) != NULL &&
-                       strcmp(IdArchiveLogement(tete4, w->fiche.idLog)->fiche.nomQuartier, p->fiche.nomQuartier) != 0) {
-                    p = suivQuartier(p);
-                }
-                if (suivQuartier(p) != NULL) { p->fiche.Nombre++; }
-                else {
-                    allouerQartier(&d);
-                    strcpy(((d)->fiche.nomQuartier), (IdArchiveLogement(tete4, w->fiche.idLog)->fiche.nomQuartier));
-                    (d)->fiche.Nombre = 1;
-                    affAdrQuartier(p, d);
-                    affAdrQuartier(d, NULL);
+            } else {
+                if (tete5 == NULL) {
+                    allouerQartier(&tete5);
+                    strcpy(((tete5)->fiche.nomQuartier), (IdArchiveLogement(tete4, w->fiche.idLog)->fiche.nomQuartier));
+                    (tete5)->fiche.Nombre = 1;
+                    p = tete5;
+                    affAdrQuartier(tete5, NULL);
+                } else {
+                    while (suivQuartier(p) != NULL &&
+                           strncmp(IdArchiveLogement(tete4, w->fiche.idLog)->fiche.nomQuartier, p->fiche.nomQuartier,
+                                   strlen(p->fiche.nomQuartier)) !=
+                           0) {
+
+                        p = suivQuartier(p);
+                    }
+                    if (strncmp(IdArchiveLogement(tete4, w->fiche.idLog)->fiche.nomQuartier, p->fiche.nomQuartier,
+                                strlen(p->fiche.nomQuartier)) ==
+                        0) { p->fiche.Nombre++; }
+                    else {
+                        allouerQartier(&d);
+                        strcpy(((d)->fiche.nomQuartier), (IdArchiveLogement(tete4, w->fiche.idLog)->fiche.nomQuartier));
+                        (d)->fiche.Nombre = 1;
+                        affAdrQuartier(p, d);
+                        affAdrQuartier(d, NULL);
+                    }
                 }
             }
         }
-
         p = tete5;
         w = suivLocation(w);
     }
@@ -1507,9 +1514,9 @@ void Histo1(ListeLocation * tete1,ListeLocation * tete2,ListeLogement * tete3,Li
 
 
 void Histo2(ListeLocation * tete1, ListeLocation * tete2,ListeLogement * tete3, ListeLogement * tete4 ){
-    ListeLocation *p=tete1,*q=tete2;
-    int cpt0,cpt1,cpt2,cpt3,ANNEE;
-    cpt0=cpt1=cpt2=cpt3=0;
+    ListeLocation *p = tete1, *q = tete2;
+    int cpt0, cpt1, cpt2, cpt3, ANNEE;
+    cpt0 = cpt1 = cpt2 = cpt3 = 0;
     printf("Entrez l'annee :");
     scanf("%d",&ANNEE);
     while(p!=NULL){
@@ -1529,32 +1536,49 @@ void Histo2(ListeLocation * tete1, ListeLocation * tete2,ListeLogement * tete3, 
         p=suivLocation(p);
     }
     while (q!=NULL){
-        if (q->fiche.dateDeb % 10000 == ANNEE || q->fiche.dateFin % 10000 == ANNEE){
-             if(q->fiche.idLog>0){
-                 switch(idLogement(tete3,q->fiche.idLog)->fiche.type){
-                     case 0: ++cpt0;
-                         break;
-                     case 1: ++cpt1;
-                         break;
-                     case 2: ++cpt2;
-                         break;
-                     case 3: ++cpt3;
-                         break;
-                     default: break;
-                 }}                                }
-        else {switch(IdArchiveLogement(tete4,p->fiche.idLog)->fiche.type){
-                case 0: ++cpt0;
-                    break;
-                case 1: ++cpt1;
-                    break;
-                case 2: ++cpt2;
-                    break;
-                case 3: ++cpt3;
-                    break;
-                default: break;
-            } }
+        if (q->fiche.dateDeb % 10000 == ANNEE || q->fiche.dateFin % 10000 == ANNEE) {
+            if (q->fiche.idLog > 0) {
+                switch (idLogement(tete3, q->fiche.idLog)->fiche.type) {
+                    case 0:
+                        ++cpt0;
+                        break;
+                    case 1:
+                        ++cpt1;
+                        break;
+                    case 2:
+                        ++cpt2;
+                        break;
+                    case 3:
+                        ++cpt3;
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+
+                switch (IdArchiveLogement(tete4, p->fiche.idLog)->fiche.type) {
+                    case 0:
+                        ++cpt0;
+                        break;
+                    case 1:
+                        ++cpt1;
+                        break;
+                    case 2:
+                        ++cpt2;
+                        break;
+                    case 3:
+                        ++cpt3;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
         q=suivLocation(q);
     }
-    printf("Pour l'annee %d : \n\t * %d fois un stdio a ete loué\n\t * %d fois un F2 a ete loué\n\t * %d fois un F3 a ete loué\n\t * %d fois un F4 a ete loué", ANNEE, cpt0, cpt1, cpt2, cpt3);
+    printf("Pour l'annee %d : \n\t * %d fois studios loues"
+                   "\n\t * %d fois F2 loues\n\t * %d fois F3 loues"
+                   "\n\t * %d fois F4 loues",
+           ANNEE, cpt0, cpt1, cpt2, cpt3);
 }
 #endif //TP01_LOG_LLC_BIBLIO_H
