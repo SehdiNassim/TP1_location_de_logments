@@ -1,16 +1,25 @@
+// ------------------------------------------------------------------
+// Crée par Benmoussat Mouad, Sehdi Nassim
 //
-// Crée par Benmoussat Mouad, Sehdi Nassim le 08/03/2018
-//
-// Bibliotheque contient tous les modeles des LLC, les structures et les modules
+// Bibliotheque contient tous les modeles des LLC, les structures
+// ansi que les parties du programmes et autres modules
+//---------------------------------------------------
 //
 #include <stdio.h>
 #include <malloc.h>
-#include <tgmath.h>
 #include <string.h>
 
 #ifndef TP01_LOG_LLC_BIBLIO_H
 #define TP01_LOG_LLC_BIBLIO_H
 
+//Chemin des fichiers de lecture/ecriture
+
+#define LOG_PATH "../logements.txt"            //chemin pour le fichier des logements
+#define ARCH_LOG_PATH "../archivelogement.txt" //chemin pour le fichier des archives des logements
+#define LOC_PATH "../locataires.txt"           //chemin pour le fichier des locataires
+#define ARCH_LOC_PATH "../archivelocataire.txt"//chemin pour le fichier des archives des locatiares
+#define LCT_PATH "../locations.txt"            //chemin pour le fichier des locations
+#define ARCH_LCT_PATH "../archivelocation.txt" //chemin pour le fichier des archives des locations
 //******DEFINITION DES TYPES UTILISE***************************
 //Definition des types de logement, chaque type aura la valeur 0,1,2,3 respectivement
 typedef enum {studio = 0, F1, F2, F3} Typelog;
@@ -241,7 +250,7 @@ void initLogement(FILE *f, ListeLogement **tete, int *cptId) { //Role: lire depu
     ListeLogement * tmp, *nouv; //2 Maillion intermediare
     int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
 
-    f = fopen("../logements.txt", "r"); //ouverture du fichier au mode lecture
+    f = fopen(LOG_PATH, "r"); //ouverture du fichier au mode lecture
     if (f == NULL) perror("fopen");
     else {
         allouerLog(&tmp);
@@ -275,7 +284,7 @@ void initarchiveLogement(FILE *f, ListeLogement **tete, int *cptId) { //Role: li
     ListeLogement * tmp, *nouv,*p; //2 Maillion intermediare
     int cpt = 0;
 
-    f = fopen("../archivelogement.txt", "r"); //ouverture du fichier au mode lecture
+    f = fopen(ARCH_LOG_PATH, "r"); //ouverture du fichier au mode lecture
     if (f == NULL) perror("fopen");
     else {
         allouerLog(&tmp);
@@ -313,7 +322,7 @@ void initLocataire(FILE * f, ListeLocataire **tete, int *cptId) {
     ListeLocataire * tmp, *nouv; //2 Maillion intermediare
     int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
 
-    f = fopen("../locataires.txt", "r"); //ouverture du fichier au mode lecture
+    f = fopen(LOC_PATH, "r"); //ouverture du fichier au mode lecture
     if (f == NULL) {
         perror("fopen");
     } else {
@@ -340,7 +349,7 @@ void initarchiveLoc(FILE * f, ListeLocataire **tete, int *cptId) {
     ListeLocataire * tmp, *nouv; //2 Maillion intermediare
     int cpt = 0; //un compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
 
-    f = fopen("../archivelocataire.txt", "r"); //ouverture du fichier archive au mode lecture
+    f = fopen(ARCH_LOC_PATH, "r"); //ouverture du fichier archive au mode lecture
     if (f == NULL) {
         perror("fopen");
     } else {
@@ -366,7 +375,7 @@ void initarchiveLoc(FILE * f, ListeLocataire **tete, int *cptId) {
 void initLocation(FILE* f, ListeLocation ** tete) {
     ListeLocation *tmp, *nouv; //2 Maillion intermediare
 
-    f = fopen("../locations.txt", "r"); //ouverture du fichier au mode lecture
+    f = fopen(LCT_PATH, "r"); //ouverture du fichier au mode lecture
     if (f == NULL) {
         perror("fopen");
     } else {
@@ -393,7 +402,7 @@ void initLocation(FILE* f, ListeLocation ** tete) {
 void initarchiveLocation(FILE* f, ListeLocation ** tete) {
     ListeLocation *tmp, *nouv; //2 Maillion intermediare
 
-    f = fopen("../archivelocation.txt", "r"); //ouverture du fichier archive au mode lecture
+    f = fopen(ARCH_LCT_PATH, "r"); //ouverture du fichier archive au mode lecture
     if (f == NULL) {
         perror("fopen");
     } else {
@@ -420,7 +429,7 @@ void initarchiveLocation(FILE* f, ListeLocation ** tete) {
 void sauvLogement(ListeLogement *tete, FILE *f) {
     ListeLogement *tmp = tete;
 
-    f = fopen("../logements.txt", "w"); //ouverture en ecriture
+    f = fopen(LOG_PATH, "w"); //ouverture en ecriture
     if (f != NULL) {
         while (tmp != NULL) {
             fprintf(f, "%d %d %s_ %d",
@@ -438,7 +447,7 @@ void sauvLogement(ListeLogement *tete, FILE *f) {
 void sauvarchiveLogement(ListeLogement *tete, FILE *f) {
     ListeLogement *tmp = tete;
 
-    f = fopen("../archivelogement.txt", "w"); //ouverture en ecriture
+    f = fopen(ARCH_LOG_PATH, "w"); //ouverture en ecriture
     if (f != NULL) {
         while (tmp != NULL) {
             fprintf(f, "%d %d %s_ %d",
@@ -456,7 +465,7 @@ void sauvarchiveLogement(ListeLogement *tete, FILE *f) {
 void sauvLocataire(ListeLocataire *tete, FILE *f) {
     ListeLocataire *tmp;
 
-    f = fopen("../locataires.txt", "w");
+    f = fopen(LOC_PATH, "w");
     tmp = tete;
     while (tmp != NULL) {
         fprintf(f, "%s_ %s_ %s", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
@@ -469,7 +478,7 @@ void sauvLocataire(ListeLocataire *tete, FILE *f) {
 void sauvarchiveLocataire(ListeLocataire *tete, FILE *f) {
     ListeLocataire *tmp;
 
-    f = fopen("../archivelocataire.txt", "w");
+    f = fopen(ARCH_LOC_PATH, "w");
     tmp = tete;
     while (tmp != NULL) {
         fprintf(f, "%s_ %s_ %s", tmp->fiche.nom, tmp->fiche.prenom, tmp->fiche.numTel);
@@ -482,7 +491,7 @@ void sauvarchiveLocataire(ListeLocataire *tete, FILE *f) {
 void sauvLocation(ListeLocation *tete, FILE *f) {
     ListeLocation *tmp;
 
-    f = fopen("../locations.txt", "w");
+    f = fopen(LCT_PATH, "w");
     tmp = tete;
     while (tmp != NULL) {
         fprintf(f, "%d %d %ld %ld",
@@ -497,7 +506,7 @@ void sauvLocation(ListeLocation *tete, FILE *f) {
 void sauvarchivelocation(ListeLocation *tete, FILE *f) {
     ListeLocation *tmp;
 
-    f = fopen("../archivelocation.txt", "w");
+    f = fopen(ARCH_LCT_PATH, "w");
     tmp = tete;
     while (tmp != NULL) {
         fprintf(f, "%d %d %ld %ld",

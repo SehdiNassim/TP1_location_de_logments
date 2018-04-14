@@ -13,9 +13,7 @@
  * hm_sehdi@esi.dz
  * ----------------------------------------------------------------------
  * NOTE: Les fichiers de lectures doivent se trouver dans le repertoire
- * parrent du executable, sinon modifier les procedure:
- * d'initialisation (initLog, initLoc, ...)
- * de sauvegarde (sauvLog, sauvLoc, ...)
+ * parrent du executable, sinon modifier les definitions dans LOG_LLC_BIBLIO.h
  * **********************************************************************/
 
 #include <stdio.h> //Bibliotheques necessaire pour les entrees sories
