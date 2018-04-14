@@ -38,7 +38,7 @@ int main() {
 
 
 
-    // le programme se repete tant que l'utilisateur decide
+    // le programme se repete tant que l'utilisateur decide de quitter
     while (noExit == 1) {
         system("cls"); //nettoyage de l'ecran a chaque boucle
         printf("Bienvenue au programme \"Gestion de locations\"\n"
@@ -50,10 +50,11 @@ int main() {
                        "\n\t6.Ajouter/Supprimer une location"
                        "\n\t7.Lister les logements selon une date"
                        "\n\t8.Trier la liste des logements selon le loyer"
-                       "\n\t9.Consulter L'historique par annee"
-                       "\n\t10.afficher les archives"
-                       "\n\t11.afficher les locataires occupant un logement de meme type et dont l'air est superieur a la SM"
-                       "\n\t12.Sauvegarder et Quitter"
+                       "\n\t9.Chercher les logements les plus proche de la commune\n\t  ayant un loyer minimal"
+                       "\n\t10.Consulter L'historique par annee"
+                       "\n\t11.afficher les archives"
+                       "\n\t12.afficher les locataires occupant un logement\n\t  de meme type et dont l'air est superieur a la SM"
+                       "\n\t13.Sauvegarder et Quitter"
                        "\nEntrez votre choix :");
         scanf("%d", &choix);
         system("cls");
@@ -85,12 +86,11 @@ int main() {
                     case 2:
                         supp_log(&logements,locations,&archivelogements,&archivelocation);
                         getch();
-                     /* Module suppLogement, a toi nassim */
                     default:
                         break;
                 }
                 break;
-            case 5: //reste a ajouter ici suppLocataire()
+            case 5:
                 printf("1.Ajouter\n2.Supprimer\n0.Retour\n");
                 int choix3 = 0;
                 scanf("%d", &choix3);
@@ -137,7 +137,7 @@ int main() {
                 triLogementLoyer(locations, logements);
                 getch();
                 break;
-            case 9:
+            case 10:
                 printf("1.Nombre de location par quartier\n"
                        "2.Nombre de location par type de logement\n");
                 int choix9;
@@ -156,7 +156,11 @@ int main() {
                         break;
                 }
                 break;
-            case 10:
+            case 9:
+                afficherLog(prochCommune(logements));
+                getch();
+                break;
+            case 11:
                 printf("1.Archive des logement\n2.Archive des locataires\n3.Archive des location\n0.Retour");
                 int choix10;
                 scanf("%d",&choix10);
@@ -178,7 +182,7 @@ int main() {
                         break;
                 }
                 break;
-            case 11:
+            case 12:
                 printf("Choisissez le type de logement :\n 1.Studio \n 2.F2 \n 3.F3 \n 4.F4 \n");
                 Typelog choix11;
                 scanf("%d",&choix11);
@@ -203,7 +207,7 @@ int main() {
                         break;
                 }
                 break;
-            case 12:
+            case 13:
                 noExit = 0;
                 break;
             default:
