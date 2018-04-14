@@ -63,6 +63,7 @@ typedef  struct MaillionLocation {
     struct MaillionLocation * adr;
 } ListeLocation;
 
+//cette structure sera utilisé pour l'affichage e l'historique
 typedef struct Quartier{
     char nomQuartier[25];
     int Nombre;
@@ -270,9 +271,9 @@ void initLogement(FILE *f, ListeLogement **tete, int *cptId) { //Role: lire depu
     fclose(f);
 }
 
-void initarchiveLogement(FILE *f, ListeLogement **tete, int *cptId) { //Role: lire depuis le fichier et cree la liste
+void initarchiveLogement(FILE *f, ListeLogement **tete, int *cptId) { //Role: lire depuis le fichier archive et cree la liste
     ListeLogement * tmp, *nouv,*p; //2 Maillion intermediare
-    int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
+    int cpt = 0;
 
     f = fopen("../archivelogement.txt", "r"); //ouverture du fichier au mode lecture
     if (f == NULL) perror("fopen");
@@ -337,9 +338,9 @@ void initLocataire(FILE * f, ListeLocataire **tete, int *cptId) {
 
 void initarchiveLoc(FILE * f, ListeLocataire **tete, int *cptId) {
     ListeLocataire * tmp, *nouv; //2 Maillion intermediare
-    int cpt = 0; //une compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
+    int cpt = 0; //un compteur qui sert a initialiser les id des logements.txt (i.e: leur position dans la liste)
 
-    f = fopen("../archivelocataire.txt", "r"); //ouverture du fichier au mode lecture
+    f = fopen("../archivelocataire.txt", "r"); //ouverture du fichier archive au mode lecture
     if (f == NULL) {
         perror("fopen");
     } else {
@@ -357,7 +358,7 @@ void initarchiveLoc(FILE * f, ListeLocataire **tete, int *cptId) {
                 tmp = suivLocataire(tmp);
             }
         }
-        *cptId = cpt; //meme chose pour initLogement
+        *cptId = cpt; //meme chose que pour initLogement
     }
     fclose(f);
 }
@@ -392,7 +393,7 @@ void initLocation(FILE* f, ListeLocation ** tete) {
 void initarchiveLocation(FILE* f, ListeLocation ** tete) {
     ListeLocation *tmp, *nouv; //2 Maillion intermediare
 
-    f = fopen("../archivelocation.txt", "r"); //ouverture du fichier au mode lecture
+    f = fopen("../archivelocation.txt", "r"); //ouverture du fichier archive au mode lecture
     if (f == NULL) {
         perror("fopen");
     } else {
@@ -791,6 +792,8 @@ void DecIdLoc(ListeLocataire ** tete) /* Décrémente tout les id des fiches des
 }
 
 void MajLocationlog(ListeLocation ** tete, int ID) {
+    // pour mettre a jour les locations apres une suppresion d'un logement
+    // ce qui se resume a décrémenter de 1 tout les idlog superieur a l'id du logement supprimé
     ListeLocation *p=*tete;
     while (p != NULL){
         if ((p->fiche).idLog > ID){(p->fiche).idLog--;}
@@ -799,6 +802,8 @@ void MajLocationlog(ListeLocation ** tete, int ID) {
 }
 
 void MajLocationloc(ListeLocation ** tete, int ID) {
+    // pour mettre a jour les locations apres une suppresion d'un locataire
+    // ce qui se resume a decrémenter de 1 tout les idloc superieur a l'id du locataire supprimé
     ListeLocation *p=*tete;
     while (p != NULL){
         if ((p->fiche).idLoc > ID){(p->fiche).idLoc--;}
@@ -807,6 +812,7 @@ void MajLocationloc(ListeLocation ** tete, int ID) {
 }
 
 int ExistLocationLog(ListeLocation * tete, int ID ) {
+    // retourne 1 si le logement  avec l'id egale a ID est louéet , 0 sinon
     ListeLocation *p;
     int l=0;
     p=tete;
@@ -818,6 +824,7 @@ int ExistLocationLog(ListeLocation * tete, int ID ) {
 }
 
 int ExistLocationLoc(ListeLocation * tete, int ID ) {
+    // retourne 1 si le locataire  avec l'id egale a ID occupe un logement , 0 sinon
     ListeLocation *p;
     int l=0;
     p=tete;
@@ -829,6 +836,8 @@ int ExistLocationLoc(ListeLocation * tete, int ID ) {
 }
 
 void insertarchivelog(ListeLogement ** tete,ListeLogement * p){
+    //on l'utilise pour inserer un logement dans les archives
+    //
     p->fiche.id=-(Longueurlistelogement(*tete)+1);
     affAdr_Log(p,*tete);
     *tete=p;
@@ -836,16 +845,22 @@ void insertarchivelog(ListeLogement ** tete,ListeLogement * p){
 }
 
 void insertarchiveloc(ListeLocataire ** tete,ListeLocataire * p){
+    //on l'utilise pour inserer un locataire dans les archives
+    //
     affAdr_Loc(p,*tete);
     *tete=p;
 }
 
 void insertarchivelocation(ListeLocation ** tete,ListeLocation * p){
+    //on l'utilise pour inserer une location dans les archives
+    //
     affAdr_Lct(p,*tete);
     *tete=p;
 }
 
 void supp_log(ListeLogement **tete1, ListeLocation * tete2, ListeLogement ** tete3,ListeLocation ** tete4){
+    //on l'utilise pour supprimer un logement
+    //
     ListeLogement *p=*tete1, *q;
     ListeLocation *w=*tete4;
     int ID;
@@ -892,6 +907,8 @@ void supp_log(ListeLogement **tete1, ListeLocation * tete2, ListeLogement ** tet
 }
 
 void supp_loc(ListeLocataire **tete1,ListeLocation * tete2,ListeLocataire ** tete3){
+    //on l'utilise pour supprimer un locataire
+    //
     ListeLocataire *p=*tete1, *q;
     int ID;
     printf("Donnez l'id du locataire que vous voulez supprimer:" );
@@ -925,6 +942,8 @@ void supp_loc(ListeLocataire **tete1,ListeLocation * tete2,ListeLocataire ** tet
 }
 
 void supp_location(ListeLocation **tete, ListeLocation **tete2){
+    //on l'utilise pour supprimer une location
+    //
     ListeLocation *p=*tete,*q;
     int idloc,idlog,trouv=0;
     printf("Entrez l'id du locataire: ");
@@ -946,6 +965,8 @@ void supp_location(ListeLocation **tete, ListeLocation **tete2){
 }
 
 void ListLocTyplog(ListeLocation * tete1,ListeLogement * tete2,ListeLocataire * tete3,int ID , ListeLocataire ** tete4){
+    //On l'utilise pour donner la liste des locataires occupant un logement de meme type et dont la superficie est superieure a la superficie moyenne
+    //
     *tete4=NULL;
     ListeLocataire * q,*w;
     ListeLocation * p=tete1;
@@ -1411,7 +1432,9 @@ ListeLogement * prochCommune(ListeLogement *tete) {
 }
 
 
-void Histo1(ListeLocation * tete1, ListeLocation * tete2, ListeLogement * tete3,ListeLogement * tete4,ListeHistorique * tete5 ) {
+void Histo1(ListeLocation * tete1, ListeLocation * tete2, ListeLogement * tete3,ListeLogement * tete4,ListeHistorique * tete5 )
+{    //On l'utilise pour la question 1 de l'historique
+    //
     ListeHistorique *p, *d;
     ListeLocation *q = tete1, *w = tete2;
     printf("Entrez l'annee :");
@@ -1513,7 +1536,10 @@ void Histo1(ListeLocation * tete1, ListeLocation * tete2, ListeLogement * tete3,
 }
 
 
-void Histo2(ListeLocation * tete1, ListeLocation * tete2,ListeLogement * tete3, ListeLogement * tete4 ){
+void Histo2(ListeLocation * tete1, ListeLocation * tete2,ListeLogement * tete3, ListeLogement * tete4 ) {
+    //On l'utilise pour la question 2 de l'historique
+    //
+
     ListeLocation *p = tete1, *q = tete2;
     int cpt0, cpt1, cpt2, cpt3, ANNEE;
     cpt0 = cpt1 = cpt2 = cpt3 = 0;
