@@ -21,7 +21,7 @@ FILE * farchivelocation;
 ListeLocataire * locataires,*archivelocataire,*Lstudio,*LF2,*LF3,*LF4;
 ListeLogement * logements,*archivelogements;
 ListeLocation * locations , *archivelocation;
-
+ListeHistorique * historiqueQuartier;
 //les variables suivantes seront modifiees a chaque ajout, suppression, etc..
 int idLogements,idarchiveLogements; //dernier Id de la liste logements
 int idLocataires,idarchivelocataire; //dernier Id de la liste locataires
@@ -83,7 +83,7 @@ int main() {
                         getch();
                         break;
                     case 2:
-                        supp_log(&logements,locations,&archivelogements);
+                        supp_log(&logements,locations,&archivelogements,&archivelocation);
                         getch();
                      /* Module suppLogement, a toi nassim */
                     default:
@@ -137,6 +137,25 @@ int main() {
                 triLogementLoyer(locations, logements);
                 getch();
                 break;
+            case 9:
+                printf("1.Nombre de location par quartier\n"
+                       "2.Nombre de location par type de logement\n");
+                int choix9;
+                scanf("%d",&choix9);
+                switch(choix9){
+                    case 1:
+                        Histo1(locations,archivelocation,logements,archivelogements,historiqueQuartier);
+                        getch();
+                        break;
+                    case 2:
+                        Histo2(locations,archivelocation,logements,archivelogements);
+                        getch();
+                        break;
+                    default:
+                        getch();
+                        break;
+                }
+                break;
             case 10:
                 printf("1.Archive des logement\n2.Archive des locataires\n3.Archive des location\n0.Retour");
                 int choix10;
@@ -160,7 +179,7 @@ int main() {
                 }
                 break;
             case 11:
-                printf("Choisissez le type de logement :\n 1.Studio \n 2.F2 \n 3.F3 \n 4.F4");
+                printf("Choisissez le type de logement :\n 1.Studio \n 2.F2 \n 3.F3 \n 4.F4 \n");
                 Typelog choix11;
                 scanf("%d",&choix11);
                 switch(choix11){
@@ -179,6 +198,8 @@ int main() {
                     case 4:
                         ListLocTyplog(locations,logements,locataires,3,&LF4);
                         getch();
+                        break;
+                    default: getch();
                         break;
                 }
                 break;
