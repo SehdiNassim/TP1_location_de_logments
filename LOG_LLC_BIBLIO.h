@@ -1334,13 +1334,15 @@ void triLogementLoyer(ListeLocation *teteLct, ListeLogement *teteLog) {
 }
 
 
-void Histo1(ListeLocation * tete1,ListeLocation * tete2,ListeLogement * tete3,ListeLogement * tete4,ListeHistorique * tete5 ) {
+void
+Histo1(ListeLocation *tete1, ListeLocation *tete2, ListeLogement *tete3, ListeLogement *tete4, ListeHistorique *tete5) {
+
     ListeHistorique *p, *d;
     ListeLocation *q = tete1, *w = tete2;
     printf("Entrez l'annee :");
     int ANNEE;
     scanf("%d", &ANNEE);
-    tete5=NULL;
+    tete5 = NULL;
     while (q != NULL) {
         if (q->fiche.dateDeb % 10000 == ANNEE || q->fiche.dateFin % 10000 == ANNEE) {
             if (tete5 == NULL) {
@@ -1375,8 +1377,7 @@ void Histo1(ListeLocation * tete1,ListeLocation * tete2,ListeLogement * tete3,Li
                     strcpy(((tete5)->fiche.nomQuartier), (idLogement(tete3, w->fiche.idLog)->fiche.nomQuartier));
                     (tete5)->fiche.Nombre = 1;
                     affAdrQuartier(tete5, NULL);
-                }
-                else {
+                } else {
                     while (suivQuartier(p) != NULL &&
                            strcmp(idLogement(tete3, w->fiche.idLog)->fiche.nomQuartier, p->fiche.nomQuartier) != 0) {
                         p = suivQuartier(p);
@@ -1399,8 +1400,7 @@ void Histo1(ListeLocation * tete1,ListeLocation * tete2,ListeLogement * tete3,Li
                 (tete5)->fiche.Nombre = 1;
                 p = tete5;
                 affAdrQuartier(tete5, NULL);
-            }
-            else {
+            } else {
                 while (suivQuartier(p) != NULL &&
                        strcmp(IdArchiveLogement(tete4, w->fiche.idLog)->fiche.nomQuartier, p->fiche.nomQuartier) != 0) {
                     p = suivQuartier(p);
@@ -1420,11 +1420,13 @@ void Histo1(ListeLocation * tete1,ListeLocation * tete2,ListeLogement * tete3,Li
         w = suivLocation(w);
     }
     p = tete5;
-    if (p==NULL){ printf("Il y a pas eu de location en %d",ANNEE);}
-    else {while (p != NULL) {
-        printf("* Dans le quartier %-20s il y a eu %d location(s) \n", p->fiche.nomQuartier, p->fiche.Nombre);
-        p = suivQuartier(p);
-    }}
+    if (p == NULL) { printf("Il y a pas eu de location en %d", ANNEE); }
+    else {
+        while (p != NULL) {
+            printf("* Dans le quartier %-20s il y a eu %d location(s) \n", p->fiche.nomQuartier, p->fiche.Nombre);
+            p = suivQuartier(p);
+        }
+    }
 
 }
 
